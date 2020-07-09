@@ -131,6 +131,27 @@ This is an app meant to help people find exercise partners in their area. It is 
   
   
 ### Networking
-- [Add list of network requests by screen ]
+- List of network requests by screen
+* Login Screen
+   * User can Login
+   * ...
+* Registration Screen
+   * User can create an account
+   * ...
+* Matches/Home
+    * User can view people who match their preferences
+    * User can click on their matches profiles
+* Profile (edit)
+    * User can view their own information and can edit it
+        * Pictures
+        * Workout preferences
+        * Experience
+        * Bio
+* Profile
+    * User can ONLY view others profile information
+* Chats with matches
+    * Displays current chats with other users
+* Chat Screen
+    * User can send messages to the other user
 - [Create basic snippets for each Parse network request]
 - [OPTIONAL: List endpoints if using existing API such as Yelp]
