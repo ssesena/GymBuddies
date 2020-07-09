@@ -113,21 +113,21 @@ This is an app meant to help people find exercise partners in their area. It is 
 | screenName   | String                 | display name for user profile                           |
 | description  | String                 | user bio                                                |
 | profileImage | File                   | image for a user's profile                              |
-| gallery      | Array<File>            | images for a user's gallery                             |
+| gallery      | Array(File)            | images for a user's gallery                             |
 | preferences  | JSON Object            | user's preferences for workout partners                 |
 | location     | String                 | user's latitude and longitude                           |
-| matches      | Array<Pointer to User> | list of pointer to users that the user has matched with |
+| matches      | Array(Pointer to User) | list of pointer to users that the user has matched with |
 | userName     | String                 | unique username for user                                |
 | email        | String                 | unique email for user                                   |
 | password     | String                 | password for user                                       |
-| chats        | Array<Pointer to Chat> | list of pointers to chats with other users |
+| chats        | Array(Pointer to Chat) | list of pointers to chats with other users |
   
 **Chat**
 | Property | Type                    | Description                                                           |
 |----------|-------------------------|-----------------------------------------------------------------------|
 | chatId   | String                  | unique id for chat                                                    |
-| users    | Array<Pointer to User>  | list of pointers to users chatting                                    |
-| messages | JSON Array<JSON Object> | list of messages, each keeping track of timestamp, contents, and user |
+| users    | Array(Pointer to User)  | list of pointers to users chatting                                    |
+| messages | JSON Array(JSON Object) | list of messages, each keeping track of timestamp, contents, and user |
   
   
 ### Networking
