@@ -105,9 +105,21 @@ This is an app meant to help people find exercise partners in their area. It is 
 ### [BONUS] Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+# User
+| # Property   | # Type                 | # Description                                           |
+|--------------|------------------------|---------------------------------------------------------|
+| userId       | String                 | unique id for user account                              |
+| screenName   | String                 | display name for user profile                           |
+| description  | String                 | user bio                                                |
+| profileImage | File                   | image for a user's profile                              |
+| gallery      | Array<File>            | images for a user's gallery                             |
+| preferences  | JSON Object            | user's preferences for workout partners                 |
+| location     | String                 | user's latitude and longitude                           |
+| matches      | Array<Pointer to User> | list of pointer to users that the user has matched with |
+| userName     | String                 | unique username for user                                |
+| email        | String                 | unique email for user                                   |
+| password     | String                 | password for user                                       |
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
