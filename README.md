@@ -107,7 +107,7 @@ This is an app meant to help people find exercise partners in their area. It is 
 ## Schema 
 ### Models
 # User
-| # Property   | # Type                 | # Description                                           |
+| Property   | Type                 | Description                                           |
 |--------------|------------------------|---------------------------------------------------------|
 | userId       | String                 | unique id for user account                              |
 | screenName   | String                 | display name for user profile                           |
@@ -120,6 +120,16 @@ This is an app meant to help people find exercise partners in their area. It is 
 | userName     | String                 | unique username for user                                |
 | email        | String                 | unique email for user                                   |
 | password     | String                 | password for user                                       |
+| chats        | Array<Pointer to Chat> | list of pointers to chats with other users |
+  
+# Chat
+| Property | Type                    | Description                                                           |
+|----------|-------------------------|-----------------------------------------------------------------------|
+| chatId   | String                  | unique id for chat                                                    |
+| users    | Array<Pointer to User>  | list of pointers to users chatting                                    |
+| messages | JSON Array<JSON Object> | list of messages, each keeping track of timestamp, contents, and user |
+  
+  
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
