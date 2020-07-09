@@ -106,7 +106,7 @@ This is an app meant to help people find exercise partners in their area. It is 
 
 ## Schema 
 ### Models
-# User
+**User**
 | Property   | Type                 | Description                                           |
 |--------------|------------------------|---------------------------------------------------------|
 | userId       | String                 | unique id for user account                              |
@@ -122,7 +122,7 @@ This is an app meant to help people find exercise partners in their area. It is 
 | password     | String                 | password for user                                       |
 | chats        | Array<Pointer to Chat> | list of pointers to chats with other users |
   
-# Chat
+**Chat**
 | Property | Type                    | Description                                                           |
 |----------|-------------------------|-----------------------------------------------------------------------|
 | chatId   | String                  | unique id for chat                                                    |
