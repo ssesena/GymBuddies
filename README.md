@@ -154,7 +154,7 @@ This is an app meant to help people find exercise partners in their area. It is 
     * (Read/GET) Query for user's matches
 * Chat Screen
     * (Read/GET) Query for user's chat with specific user
-    * (Update/POST) Create new message in chat
+    * (Create/POST) Create new message in chat
     
 - [Create basic snippets for each Parse network request]
 - [OPTIONAL: List endpoints if using existing API such as Yelp]
