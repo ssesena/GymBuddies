@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.gymbuddies.R;
+import com.example.gymbuddies.adapters.GalleryGridAdapter;
 import com.example.gymbuddies.databinding.FragmentEditProfileBinding;
 
 /**
@@ -71,6 +72,8 @@ public class EditProfileFragment extends Fragment {
         ArrayAdapter adapterExperience = ArrayAdapter.createFromResource(getContext(), R.array.workout_experience, R.layout.spinner_item1);
         binding.spExperience.setAdapter(adapterExperience);
         binding.spExperiencePreference.setAdapter(adapterExperience);
+
+        binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext()));
 
         return binding.getRoot();
     }
