@@ -11,4 +11,19 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="workout_preferences">
+        <item>Lifting</item>
+        <item>Running</item>
+        <item>Swimming</item>
+        <item>Cycling</item>
+        <item>Yoga</item>
+        <item>Buddy</item>
+        <item>Dancing</item>
+    </string-array>
+    <string-array name="workout_experience">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+        <item>Expert</item>
+    </string-array>
 </resources>

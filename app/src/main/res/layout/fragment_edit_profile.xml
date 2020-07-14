@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ChatFragment">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/ivEditProfileImage"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_baseline_person_24"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="10dp"/>
+
+    <TextView
+        android:id="@+id/tvEditProfileBiography"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/ivEditProfileImage"
+        android:fontFamily="sans-serif"
+        android:text="Biography"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnChangeBiography"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"
+        android:textAllCaps="false"
+        android:layout_marginEnd="10dp"/>
+
+
+    <EditText
+        android:id="@+id/etEditProfileBiography"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvEditProfileScreenName"
+        android:layout_below="@+id/tvEditProfileBiography"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/ivEditProfileImage" />
+
+    <TextView
+        android:id="@+id/tvEditProfileScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivEditProfileImage"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:text="Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvEditProfileWorkoutPreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvEditProfileScreenName"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:text="Workout Preference"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <Spinner
+        android:id="@+id/spPreference"
+        android:layout_marginTop="12dp"
+        android:layout_below="@id/tvEditProfileWorkoutPreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnChangePreference"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:entries="@array/workout_preferences" />
+
+    <Button
+        android:id="@+id/btnChangePreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvEditProfileWorkoutPreference"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:text="Update"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:id="@+id/tvEditProfileExperience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/spPreference"
+        android:fontFamily="sans-serif"
+        android:text="Your Experience"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <Spinner
+        android:id="@+id/spExperience"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tvEditProfileExperience"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnChangePreference"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:entries="@array/workout_experience" />
+
+    <Button
+        android:id="@+id/btnChangeExperience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvEditProfileExperience"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:text="Update"
+        android:textAllCaps="false"/>
+
+    <TextView
+        android:id="@+id/tvEditProfileExperiencePreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:layout_below="@+id/spExperience"
+        android:text="Experience Preference"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <Spinner
+        android:id="@+id/spExperiencePreference"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/tvEditProfileExperiencePreference"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/btnChangePreference"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:entries="@array/workout_experience" />
+
+    <Button
+        android:id="@+id/btnChangeExperiencePreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvEditProfileExperiencePreference"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:text="Update"
+        android:textAllCaps="false"/>
+
+    <GridView
+        android:id="@+id/gvEditProfileGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/btnChangeExperiencePreference"
+        android:numColumns="auto_fit" />
+
+
+
+
+
+
+</RelativeLayout>

@@ -8,9 +8,12 @@ import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import com.example.gymbuddies.databinding.ActivityMainBinding;
 import com.example.gymbuddies.fragments.ChatFragment;
+import com.example.gymbuddies.fragments.EditProfileFragment;
+import com.example.gymbuddies.fragments.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.action_profile:
-                        fragment = new ChatFragment();
+                        fragment = new EditProfileFragment();
                         break;
                     case R.id.action_home:
-                        fragment = new ChatFragment();
+                        fragment = new HomeFragment();
                         break;
                     case R.id.action_chat:
                     default:
@@ -47,5 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         binding.bottomNavigation.setSelectedItemId(R.id.action_home);
+
     }
 }
