@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/image/baseline_image_24.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/add_a_photo/baseline_add_a_photo_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="bbbbbb" />
-                            <entry key="outputName" value="ic_baseline_image_24" />
+                            <entry key="color" value="fefffd" />
+                            <entry key="outputName" value="ic_baseline_add_a_photo_24" />
                           </map>
                         </option>
                       </PersistentState>

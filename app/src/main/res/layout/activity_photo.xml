@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhotoActivity"
+    android:orientation="vertical">
+    
+    <Button
+        android:id="@+id/btnTakePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:text="Take Photo"
+        android:textAllCaps="false"/>
+    
+    <Button
+        android:id="@+id/btnChooseFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:text="Choose from Gallery"
+        android:textAllCaps="false"/>
+    
+    <ImageView
+        android:id="@+id/ivPhotoImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:layout_marginHorizontal="40dp"
+        tools:srcCompat="@tools:sample/avatars"/>
+    <Button
+        android:id="@+id/btnAddPhotoToProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:text="Add to Profile"
+        android:textAllCaps="false"/>
+
+        
+
+</LinearLayout>
