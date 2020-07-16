@@ -17,10 +17,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gymbuddies.databinding.ActivityPhotoBinding;
+import com.example.gymbuddies.fragments.EditProfileFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
 
 import java.io.File;
 
@@ -31,6 +34,7 @@ public class PhotoActivity extends AppCompatActivity {
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private File photoFile;
     public String photoFileName = "photo.jpg";
+    Boolean addProfileImage;
 
 
     @Override
@@ -39,6 +43,8 @@ public class PhotoActivity extends AppCompatActivity {
         binding = ActivityPhotoBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        addProfileImage = getIntent().getBooleanExtra(EditProfileFragment.class.getSimpleName(), false);
 
         setButtonOnClickListeners(binding);
 
@@ -58,9 +64,28 @@ public class PhotoActivity extends AppCompatActivity {
                     return;
                 }
                 ParseUser user = ParseUser.getCurrentUser();
-                uploadProfileImage(user, photoFile);
+                if (addProfileImage) {
+                    uploadProfileImage(user, photoFile);
+                } else {
+                    uploadGalleryImage(user,photoFile);
+                }
             }
         });
+    }
+
+    private void uploadGalleryImage(ParseUser user, File photoFile) {
+        JSONArray gallery =  user.getJSONArray("gallery");
+        gallery.put(new ParseFile(photoFile));
+        user.put("gallery", gallery);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                Log.e(TAG, "Error while saving",e);
+                Toast.makeText(PhotoActivity.this, "Error while saving!", Toast.LENGTH_LONG).show();
+            }
+        });
+        finish();
+
     }
 
     private void uploadProfileImage(ParseUser user, File photoFile) {

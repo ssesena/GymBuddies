@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -26,6 +27,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +42,7 @@ public class EditProfileFragment extends Fragment {
     ParseUser user = ParseUser.getCurrentUser();
     public static final String TAG = "EditProfileFragment";
     private FragmentEditProfileBinding binding;
+    public static final int GALLERY_PHOTO_LIMIT = 6;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,8 +96,6 @@ public class EditProfileFragment extends Fragment {
         binding.spExperience.setAdapter(adapterExperience);
         binding.spExperiencePreference.setAdapter(adapterExperience);
 
-        binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext()));
-
         setButtonOnClickListeners(binding);
 
         try {
@@ -122,6 +123,13 @@ public class EditProfileFragment extends Fragment {
             ParseFile profileImage = user.getParseFile("profileImage");
             if(profileImage != null) {
                 Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
+            }
+            JSONArray gallery = user.getJSONArray("gallery");
+            if(gallery == null){
+                binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
+            }
+            else{
+                binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
             }
 
 
@@ -178,10 +186,40 @@ public class EditProfileFragment extends Fragment {
         binding.ivAddImageToProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Boolean addProfileImage = true;
                 Intent intent = new Intent(getContext(), PhotoActivity.class);
+                intent.putExtra(EditProfileFragment.class.getSimpleName(), addProfileImage);
                 startActivity(intent);
             }
         });
+
+        binding.btnAddPhotoToGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONArray gallery = user.getJSONArray("gallery");
+                if(gallery == null){
+                    gallery = new JSONArray();
+                }
+                if(gallery.length() == 6){
+                    Toast.makeText(getContext(), "Already at photo limit!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Boolean addProfileImage = false;
+                Intent intent = new Intent(getContext(), PhotoActivity.class);
+                intent.putExtra(EditProfileFragment.class.getSimpleName(), addProfileImage);
+                startActivity(intent);
+            }
+        });
+
+        binding.gvEditProfileGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                deletePhoto();
+            }
+        });
+    }
+
+    private void deletePhoto() {
 
     }
 

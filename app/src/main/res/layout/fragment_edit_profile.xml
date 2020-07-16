@@ -180,7 +180,7 @@
         <GridView
             android:id="@+id/gvEditProfileGallery"
             android:layout_width="match_parent"
-            android:layout_height="310dp"
+            android:layout_height="400dp"
             android:gravity="center"
             android:layout_margin="10dp"
             android:layout_below="@+id/btnChangeExperiencePreference"
@@ -188,6 +188,18 @@
             android:columnWidth="100dp"
             android:horizontalSpacing="10dp"
             android:verticalSpacing="10dp" />
+
+        <Button
+            android:id="@+id/btnAddPhotoToGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/gvEditProfileGallery"
+            android:text="Add Photo"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"/>
+
+
 
     </RelativeLayout>
 </ScrollView>
