@@ -180,7 +180,7 @@
         <GridView
             android:id="@+id/gvEditProfileGallery"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="310dp"
             android:gravity="center"
             android:layout_margin="10dp"
             android:layout_below="@+id/btnChangeExperiencePreference"

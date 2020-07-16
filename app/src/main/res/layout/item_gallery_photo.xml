@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ImageView
+
+        android:layout_width="100dp"
+        android:layout_height="178dp"
+        android:id="@+id/ivGalleryImage"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_baseline_image_24"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="10dp"/>
+
+    <ImageView
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:id="@+id/ivRemovePhoto"
+        android:src="@drawable/ic_baseline_remove_circle_24"
+        android:layout_marginTop="155dp"
+        android:layout_marginStart="75dp"/>
+</RelativeLayout>
+
+
