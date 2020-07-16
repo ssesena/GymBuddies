@@ -103,8 +103,11 @@ public class GalleryGridAdapter extends BaseAdapter {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                Log.e(TAG, "Error while saving",e);
-                Toast.makeText(context, "Error while saving!", Toast.LENGTH_LONG).show();
+                if(e != null){
+                    Log.e(TAG, "Error while saving",e);
+                    Toast.makeText(context, "Error while saving!", Toast.LENGTH_LONG).show();
+
+                }
             }
         });
     }

@@ -80,8 +80,11 @@ public class PhotoActivity extends AppCompatActivity {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                Log.e(TAG, "Error while saving",e);
-                Toast.makeText(PhotoActivity.this, "Error while saving!", Toast.LENGTH_LONG).show();
+                if(e != null){
+                    Log.e(TAG, "Error while saving",e);
+                    Toast.makeText(PhotoActivity.this, "Error while saving!", Toast.LENGTH_LONG).show();
+
+                }
             }
         });
         finish();

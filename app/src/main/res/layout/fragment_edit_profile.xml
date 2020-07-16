@@ -199,6 +199,16 @@
             android:textAllCaps="false"
             android:layout_marginTop="10dp"/>
 
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/btnAddPhotoToGallery"
+            android:text="Log Out"
+            android:layout_marginBottom="10dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"/>
 
 
     </RelativeLayout>

@@ -16,6 +16,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.gymbuddies.LoginActivity;
 import com.example.gymbuddies.PhotoActivity;
 import com.example.gymbuddies.R;
 import com.example.gymbuddies.adapters.GalleryGridAdapter;
@@ -124,6 +125,7 @@ public class EditProfileFragment extends Fragment {
             if(profileImage != null) {
                 Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
             }
+
             JSONArray gallery = user.getJSONArray("gallery");
             if(gallery == null){
                 binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
@@ -131,6 +133,9 @@ public class EditProfileFragment extends Fragment {
             else{
                 binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
             }
+
+            String screenName = user.getString("screenName");
+            binding.tvEditProfileScreenName.setText(screenName);
 
 
     }
@@ -211,16 +216,19 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        binding.gvEditProfileGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                deletePhoto();
+            public void onClick(View view) {
+                ParseUser.logOut();
+                goLoginActivity();
             }
         });
     }
 
-    private void deletePhoto() {
-
+    private void goLoginActivity() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     private void changeBiography(String biography) {
