@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/remove_circle/baseline_remove_circle_24.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/arrow_forward_ios/baseline_arrow_forward_ios_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="f32132" />
-                            <entry key="outputName" value="ic_baseline_remove_circle_24" />
+                            <entry key="color" value="bbbbbb" />
+                            <entry key="outputName" value="ic_baseline_arrow_forward_ios_24" />
                           </map>
                         </option>
                       </PersistentState>

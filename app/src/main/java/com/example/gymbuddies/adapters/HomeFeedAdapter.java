@@ -1,6 +1,8 @@
 package com.example.gymbuddies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.gymbuddies.ViewProfileActivity;
 import com.example.gymbuddies.databinding.ItemHomeMatchProfileBinding;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -43,21 +46,25 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         JSONObject match = null;
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                Log.i(TAG, "Clicked!");
-////                if(position != RecyclerView.NO_POSITION){
-////                    try {
-////                        ParseUser user = matches.getJSONObject(position);
-////                    } catch (JSONException e) {
-////                        e.printStackTrace();
-////                    }
-////                }
-////            }
-////        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "Clicked!");
+                if(position != RecyclerView.NO_POSITION){
+                    JSONObject clickedMatch = null;
+                    try {
+                        clickedMatch = matches.getJSONObject(position);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    holder.displayMatch(clickedMatch, false);
+
+
+                }
+            }
+        });
         
         try {
             match = matches.getJSONObject(position);
@@ -89,10 +96,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
         }
 
         public void bind(JSONObject match) throws JSONException {
-            getMatch(match);
+            Boolean forHomeFeed = true;
+            displayMatch(match, forHomeFeed);
         }
 
-        public void getMatch(JSONObject match){
+        public void displayMatch(JSONObject match, final Boolean forHomeFeed){
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             try {
                 query.whereEqualTo("objectId", match.getString("objectId"));
@@ -102,7 +110,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             query.findInBackground(new FindCallback<ParseUser>() {
                 @Override
                 public void done(List<ParseUser> userMatches, ParseException e) {
-                    if(e==null){
+                    if(e==null && forHomeFeed){
                         ParseUser userMatch = userMatches.get(0);
                         Log.i(TAG, userMatch.toString());
                         Toast.makeText(context, "Match found!", Toast.LENGTH_SHORT).show();
@@ -114,6 +122,23 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
                         binding.tvHomeBiography.setText(matchBio);
                         binding.tvHomeScreenName.setText(matchName);
+                    }
+                    else if(e==null && !forHomeFeed){
+                        ParseUser userMatch = userMatches.get(0);
+                        String matchImageUrl = null;
+                        matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
+                        String matchBio = userMatch.getString("biography");
+                        String matchName = userMatch.getString("screenName");
+                        String matchPreferences = userMatch.getJSONObject("preferences").toString();
+                        String matchGallery = userMatch.getJSONArray("gallery").toString();
+
+                        Intent intent = new Intent(context, ViewProfileActivity.class);
+                        intent.putExtra("screenName",matchName);
+                        intent.putExtra("biography",matchBio);
+                        intent.putExtra("profileImage", matchImageUrl);
+                        intent.putExtra("preferences", matchPreferences);
+                        intent.putExtra("gallery", matchGallery);
+                        context.startActivity(intent);
                     }
                     else{
                         Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();

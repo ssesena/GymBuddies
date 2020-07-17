@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewProfileActivity">
+
+    <ImageView
+        android:id="@+id/ivViewProfileImage"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/ivBackArrow"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleX="-1"
+        android:layout_marginStart="-15dp"
+        android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:layout_marginTop="100dp"/>
+
+    <ImageView
+        android:id="@+id/ivForwardArrow"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="-15dp"
+        android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:id="@+id/tvViewProfileScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Screen Name"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/ivViewProfileImage"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tvViewProfileBiography"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Biography"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvViewProfilePreference"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+    
+    <TextView
+        android:id="@+id/tvViewProfileExperience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Experience"
+        android:layout_below="@+id/ivViewProfileImage"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tvViewProfileScreenName"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <TextView
+        android:id="@+id/tvViewProfilePreference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Looking for..."
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tvViewProfileScreenName"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="italic"/>
+    
+
+
+
+</RelativeLayout>
