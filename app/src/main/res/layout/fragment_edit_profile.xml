@@ -77,6 +77,16 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/btnEditProfileViewProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="View Profile"
+            android:layout_toEndOf="@+id/tvEditProfileScreenName"
+            android:layout_below="@+id/ivEditProfileImage"
+            android:layout_marginStart="40dp"/>
+
         <TextView
             android:id="@+id/tvEditProfileWorkoutPreference"
             android:layout_width="wrap_content"

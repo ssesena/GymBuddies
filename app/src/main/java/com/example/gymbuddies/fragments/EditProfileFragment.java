@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.gymbuddies.LoginActivity;
 import com.example.gymbuddies.PhotoActivity;
 import com.example.gymbuddies.R;
+import com.example.gymbuddies.ViewProfileActivity;
 import com.example.gymbuddies.adapters.GalleryGridAdapter;
 import com.example.gymbuddies.databinding.FragmentEditProfileBinding;
 import com.parse.FindCallback;
@@ -223,6 +224,20 @@ public class EditProfileFragment extends Fragment {
                 goLoginActivity();
             }
         });
+
+        binding.btnEditProfileViewProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean userProfile = true;
+                goViewProfileActivity(userProfile);
+            }
+        });
+    }
+
+    private void goViewProfileActivity(Boolean userProfile) {
+        Intent intent = new Intent(getContext(), ViewProfileActivity.class);
+        intent.putExtra(EditProfileFragment.class.getSimpleName(), userProfile);
+        startActivity(intent);
     }
 
     private void goLoginActivity() {
