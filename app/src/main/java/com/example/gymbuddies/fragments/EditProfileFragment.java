@@ -110,6 +110,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void showAll(FragmentEditProfileBinding binding) throws Exception{
+        if(user.getJSONObject("preferences") != null) {
             String workoutPreference = user.getJSONObject("preferences").getString("workout_preference");
             setSpinnerToValue(binding.spPreference, workoutPreference);
 
@@ -118,25 +119,26 @@ public class EditProfileFragment extends Fragment {
 
             String experiencePreference = user.getJSONObject("preferences").getString("experience_preference");
             setSpinnerToValue(binding.spExperiencePreference, experiencePreference);
+        }
 
-            String biography = user.getString("biography");
-            binding.etEditProfileBiography.setText(biography);
+        String biography = user.getString("biography");
+        binding.etEditProfileBiography.setText(biography);
 
-            ParseFile profileImage = user.getParseFile("profileImage");
-            if(profileImage != null) {
-                Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
-            }
+        ParseFile profileImage = user.getParseFile("profileImage");
+        if(profileImage != null) {
+            Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
+        }
 
-            JSONArray gallery = user.getJSONArray("gallery");
-            if(gallery == null){
-                binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
-            }
-            else{
-                binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
-            }
+        JSONArray gallery = user.getJSONArray("gallery");
+        if(gallery == null){
+            binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
+        }
+        else{
+            binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
+        }
 
-            String screenName = user.getString("screenName");
-            binding.tvEditProfileScreenName.setText(screenName);
+        String screenName = user.getString("screenName");
+        binding.tvEditProfileScreenName.setText(screenName);
 
 
     }
@@ -228,8 +230,13 @@ public class EditProfileFragment extends Fragment {
         binding.btnEditProfileViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Boolean userProfile = true;
-                goViewProfileActivity(userProfile);
+                if (user.getParseFile("profileImage") != null && user.getJSONObject("preferences")!= null) {
+                    Boolean userProfile = true;
+                    goViewProfileActivity(userProfile);
+                }
+                else{
+                    Toast.makeText(getContext(), "You have not updated your profile completely", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -271,10 +278,10 @@ public class EditProfileFragment extends Fragment {
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e!=null){
-                    Log.e(TAG, "Error while saving",e);
-                    Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
-                }
+            if(e!=null){
+                Log.e(TAG, "Error while saving",e);
+                Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
+            }
             }
         });
     }

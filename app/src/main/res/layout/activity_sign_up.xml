@@ -11,6 +11,22 @@
 
 
     <EditText
+        android:id="@+id/etFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="First Name"
+        android:layout_marginHorizontal="40dp"/>
+
+    <EditText
+        android:id="@+id/etLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Last Name"
+        android:layout_marginHorizontal="40dp"/>
+
+    <EditText
         android:id="@+id/etSignUpUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

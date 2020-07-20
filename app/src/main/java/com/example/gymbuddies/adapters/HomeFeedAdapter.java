@@ -83,7 +83,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return matches.length();
+        if(matches != null) {
+            return matches.length();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
