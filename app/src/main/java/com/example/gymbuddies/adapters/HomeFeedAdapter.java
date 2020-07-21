@@ -114,17 +114,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 @Override
                 public void done(List<ParseUser> userMatches, ParseException e) {
                     if(e==null && forHomeFeed){
-                        ParseUser userMatch = userMatches.get(0);
-                        Log.i(TAG, userMatch.toString());
-                        Toast.makeText(context, "Match found!", Toast.LENGTH_SHORT).show();
-                        String matchImageUrl = null;
-                        matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
-                        String matchBio = userMatch.getString("biography");
-                        String matchName = userMatch.getString("screenName");
+                        for(ParseUser userMatch:userMatches) {
+//                            ParseUser userMatch = userMatches.get(0);
+                            Log.i(TAG, userMatch.toString());
+                            Toast.makeText(context, "Match found!", Toast.LENGTH_SHORT).show();
+                            String matchImageUrl = null;
+                            matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
+                            String matchBio = userMatch.getString("biography");
+                            String matchName = userMatch.getString("screenName");
 
-                        Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
-                        binding.tvHomeBiography.setText(matchBio);
-                        binding.tvHomeScreenName.setText(matchName);
+                            Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
+                            binding.tvHomeBiography.setText(matchBio);
+                            binding.tvHomeScreenName.setText(matchName);
+                        }
                     }
                     else if(e==null && !forHomeFeed){
                         ParseUser userMatch = userMatches.get(0);

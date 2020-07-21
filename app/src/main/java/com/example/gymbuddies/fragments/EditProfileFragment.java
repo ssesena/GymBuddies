@@ -33,7 +33,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,7 +110,89 @@ public class EditProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
+        findMatches();
+
         return binding.getRoot();
+    }
+
+    private void findMatches() {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereNotEqualTo("username", user.getUsername());
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> matches, ParseException e) {
+                if(e!=null){
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Log.i(TAG, matches.size()+"");
+
+                //Get logged in user's location and parse correctly
+                String userCoords[] = user.getString("location").split(" ");
+                double userLat = Double.parseDouble(userCoords[0]);
+                double userLon = Double.parseDouble(userCoords[1]);
+
+                //Create Array and Hash Table to keep track of which matches are the closest
+                ArrayList<Double> distances = new ArrayList<>();
+                Hashtable<Double, ParseUser> distanceToMatchDict = new Hashtable<Double, ParseUser>();
+                ArrayList<ParseUser> closestMatches = new ArrayList<>();
+
+
+                //Iterate through the matches
+                for(ParseUser match:matches){
+
+//                    Log.i(TAG, match.toString());
+
+                    //Parse matches location correctly
+                    String matchCoords[] = match.getString("location").split(" ");
+                    double matchLat = Double.parseDouble(matchCoords[0]);
+                    double matchLon = Double.parseDouble(matchCoords[1]);
+
+                    //Find distance between user and match
+                    double distance = findDistance(userLat,userLon,matchLat,matchLon);
+
+                    //Add distance to list and hash table
+                    distances.add(distance);
+                    distanceToMatchDict.put(distance, match);
+                }
+
+                Log.i(TAG, distances.toString());
+                Log.i(TAG, distanceToMatchDict.toString());
+
+                //After all that, now I need to sort them
+                Collections.sort(distances);
+
+                //Now to iterate through the distances
+                for(double distance:distances){
+
+                    //And add them to the user's potential match list
+                    closestMatches.add(distanceToMatchDict.get(distance));
+                }
+
+                //Create a new JSON Array to store matches
+                JSONArray newMatches = new JSONArray();
+
+
+                //Next we update the user's matches by iterating through the new list
+                for(ParseUser match:closestMatches){
+                    newMatches.put(match);
+                }
+
+                //Finally we update the user's matches
+                user.put("matches", newMatches);
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null){
+                            Log.e(TAG, "Error while saving",e);
+                            Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     private void showAll(FragmentEditProfileBinding binding) throws Exception{
@@ -296,6 +382,39 @@ public class EditProfileFragment extends Fragment {
             }
         }
         spinner.setSelection(index);
+    }
+
+    private static double findDistance(double lat1, double lon1, double lat2, double lon2) {
+//        double φ1 = lat1 * Math.PI/180, φ2 = lat2 * Math.PI/180, Δλ = (lon2-lon1) * Math.PI/180, R = 6371e3;
+//        double d = Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * R;
+        double R = 3958.8; // miles
+        double φ1 = lat1 * Math.PI/180; // φ, λ in radians
+        double φ2 = lat2 * Math.PI/180;
+        double Δφ = (lat2-lat1) * Math.PI/180;
+        double Δλ = (lon2-lon1) * Math.PI/180;
+
+        double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                        Math.cos(φ1) * Math.cos(φ2) *
+                                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double d = R * c; // in miles
+        Log.i(TAG, lat1+","+lon1+","+lat2+","+lon2);
+        return d;
+
+
+//        if ((lat1 == lat2) && (lon1 == lon2)) {
+//            Log.i(TAG, "Returning 0");
+//            return 0;
+//        }
+//        else {
+//            double theta = lon1 - lon2;
+//            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+//            dist = Math.acos(dist);
+//            dist = Math.toDegrees(dist);
+//            dist = dist * 60 * 1.1515;
+//            return (dist);
+//        }
     }
 
 }
