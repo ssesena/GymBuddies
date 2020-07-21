@@ -34,20 +34,24 @@ public class ViewProfileActivity extends AppCompatActivity {
         setContentView(view);
 
         photoIndex = -1;
+
+        //Getting intent from either home fee or edit profile screen
         Intent intent = getIntent();
+
+        //Getting a boolean value to determine whether or not to display the user or match screen
         Boolean userProfile = intent.getBooleanExtra(EditProfileFragment.class.getSimpleName(), false);
         if(!userProfile) {
 
+            //Retrieving all of the info from the properties for the match and populating views
             String matchBio = intent.getStringExtra("biography");
             String matchName = intent.getStringExtra("screenName");
             matchProfileImageUrl = intent.getStringExtra("profileImage");
+            String userExperience = intent.getStringExtra("user_experience");
+            String experiencePreference = intent.getStringExtra("experience_preference");
+            String workoutPreference = intent.getStringExtra("workout_preference");
+            binding.tvViewProfilePreference.setText("Looking for " + experiencePreference + " " + workoutPreference);
+            binding.tvViewProfileExperience.setText(userExperience);
             try {
-                JSONObject matchPreferences = new JSONObject(intent.getStringExtra("preferences"));
-                String userExperience = matchPreferences.getString("user_experience");
-                String experiencePreference = matchPreferences.getString("experience_preference");
-                String workoutPreference = matchPreferences.getString("workout_preference");
-                binding.tvViewProfilePreference.setText("Looking for " + experiencePreference + " " + workoutPreference);
-                binding.tvViewProfileExperience.setText(userExperience);
                 matchGallery = new JSONArray(intent.getStringExtra("gallery"));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -57,26 +61,24 @@ public class ViewProfileActivity extends AppCompatActivity {
             Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
         }
         else {
+
+            //Retrieving current logged in user
             ParseUser user = ParseUser.getCurrentUser();
+
+            //Populating screen with user info
             String userBio = user.getString("biography");
             String userName = user.getString("screenName");
-            try {
-                matchProfileImageUrl = user.getParseFile("profileImage").getUrl();
-                JSONObject userPreferences = user.getJSONObject("preferences");
-                String userExperience = userPreferences.getString("user_experience");
-                String experiencePreference = userPreferences.getString("experience_preference");
-                String workoutPreference = userPreferences.getString("workout_preference");
-                binding.tvViewProfilePreference.setText("Looking for " + experiencePreference + " " + workoutPreference);
-                binding.tvViewProfileExperience.setText(userExperience);
-                matchGallery = user.getJSONArray("gallery");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            matchProfileImageUrl = user.getParseFile("profileImage").getUrl();
+            String userExperience = user.getString("user_experience");
+            String experiencePreference = user.getString("experience_preference");
+            String workoutPreference = user.getString("workout_preference");
+            binding.tvViewProfilePreference.setText("Looking for " + experiencePreference + " " + workoutPreference);
+            binding.tvViewProfileExperience.setText(userExperience);
+            matchGallery = user.getJSONArray("gallery");
             binding.tvViewProfileBiography.setText(userBio);
             binding.tvViewProfileScreenName.setText(userName);
             Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
         }
-
 
         setOnCLickListeners();
     }

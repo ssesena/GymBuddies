@@ -17,7 +17,7 @@
             android:id="@+id/ivEditProfileImage"
             tools:srcCompat="@tools:sample/avatars"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_baseline_person_24"
+            android:src="@drawable/profile_icon"
             android:scaleType="centerCrop"
             android:layout_marginStart="10dp"/>
 

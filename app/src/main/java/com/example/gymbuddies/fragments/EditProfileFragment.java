@@ -196,32 +196,29 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void showAll(FragmentEditProfileBinding binding) throws Exception{
-        if(user.getJSONObject("preferences") != null) {
-            String workoutPreference = user.getJSONObject("preferences").getString("workout_preference");
-            setSpinnerToValue(binding.spPreference, workoutPreference);
 
-            String userExperience = user.getJSONObject("preferences").getString("user_experience");
-            setSpinnerToValue(binding.spExperience, userExperience);
+        String workoutPreference = user.getString("workout_preference");
+        String userExperience = user.getString("user_experience");
+        String experiencePreference = user.getString("experience_preference");
 
-            String experiencePreference = user.getJSONObject("preferences").getString("experience_preference");
-            setSpinnerToValue(binding.spExperiencePreference, experiencePreference);
-        }
+
+        setSpinnerToValue(binding.spPreference, workoutPreference);
+
+        setSpinnerToValue(binding.spExperience, userExperience);
+
+        setSpinnerToValue(binding.spExperiencePreference, experiencePreference);
 
         String biography = user.getString("biography");
         binding.etEditProfileBiography.setText(biography);
 
         ParseFile profileImage = user.getParseFile("profileImage");
-        if(profileImage != null) {
-            Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
-        }
+        Glide.with(getContext()).load(profileImage.getUrl()).into(binding.ivEditProfileImage);
 
         JSONArray gallery = user.getJSONArray("gallery");
-        if(gallery == null){
-            binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
-        }
-        else{
-            binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
-        }
+        binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), new JSONArray()));
+
+        binding.gvEditProfileGallery.setAdapter(new GalleryGridAdapter(getContext(), gallery));
+
 
         String screenName = user.getString("screenName");
         binding.tvEditProfileScreenName.setText(screenName);
@@ -235,11 +232,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String value = binding.spPreference.getSelectedItem().toString();
-                try {
-                    changeUserPreferences("workout_preference", value);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                changeUserPreferences("workout_preference", value);
 
             }
         });
@@ -248,11 +241,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String value = binding.spExperience.getSelectedItem().toString();
-                try {
-                    changeUserPreferences("user_experience", value);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                changeUserPreferences("user_experience", value);
 
             }
         });
@@ -261,11 +250,8 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String value = binding.spExperiencePreference.getSelectedItem().toString();
-                try {
-                    changeUserPreferences("experience_preference", value);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                changeUserPreferences("experience_preference", value);
+
             }
         });
 
@@ -316,13 +302,8 @@ public class EditProfileFragment extends Fragment {
         binding.btnEditProfileViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (user.getParseFile("profileImage") != null && user.getJSONObject("preferences")!= null) {
-                    Boolean userProfile = true;
-                    goViewProfileActivity(userProfile);
-                }
-                else{
-                    Toast.makeText(getContext(), "You have not updated your profile completely", Toast.LENGTH_LONG).show();
-                }
+                Boolean userProfile = true;
+                goViewProfileActivity(userProfile);
             }
         });
     }
@@ -353,14 +334,8 @@ public class EditProfileFragment extends Fragment {
 
     }
 
-    private void changeUserPreferences(String property, String value) throws JSONException {
-
-        JSONObject jsonObject = user.getJSONObject("preferences");
-        if(jsonObject == null){
-            jsonObject = new JSONObject();
-        }
-        jsonObject.put(property, value);
-        user.put("preferences", jsonObject);
+    private void changeUserPreferences(String property, String value) {
+        user.put(property, value);
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

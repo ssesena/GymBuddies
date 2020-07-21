@@ -12,7 +12,7 @@
         android:layout_height="100dp"
         android:id="@+id/ivHomeProfileImage"
         tools:srcCompat="@tools:sample/avatars"
-        android:src="@drawable/ic_baseline_person_24"
+        android:src="@drawable/profile_icon"
         android:scaleType="centerCrop" />
 
     <TextView

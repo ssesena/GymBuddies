@@ -12,13 +12,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="workout_preferences">
-        <item>Lifting</item>
-        <item>Running</item>
-        <item>Swimming</item>
-        <item>Cycling</item>
-        <item>Yoga</item>
+        <item>Lifter</item>
+        <item>Runner</item>
+        <item>Swimmer</item>
+        <item>Cyclist</item>
+        <item>Yogi</item>
         <item>Buddy</item>
-        <item>Dancing</item>
+        <item>Dancer</item>
     </string-array>
     <string-array name="workout_experience">
         <item>Beginner</item>

@@ -115,9 +115,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 public void done(List<ParseUser> userMatches, ParseException e) {
                     if(e==null && forHomeFeed){
                         for(ParseUser userMatch:userMatches) {
-//                            ParseUser userMatch = userMatches.get(0);
-                            Log.i(TAG, userMatch.toString());
-                            Toast.makeText(context, "Match found!", Toast.LENGTH_SHORT).show();
                             String matchImageUrl = null;
                             matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
                             String matchBio = userMatch.getString("biography");
@@ -134,14 +131,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
                         String matchBio = userMatch.getString("biography");
                         String matchName = userMatch.getString("screenName");
-                        String matchPreferences = userMatch.getJSONObject("preferences").toString();
+                        String matchWorkout = userMatch.getString("workout_preference");
+                        String matchExperiencePreference = userMatch.getString("experience_preference");
+                        String matchExperience = userMatch.getString("user_experience");
                         String matchGallery = userMatch.getJSONArray("gallery").toString();
 
                         Intent intent = new Intent(context, ViewProfileActivity.class);
                         intent.putExtra("screenName",matchName);
                         intent.putExtra("biography",matchBio);
                         intent.putExtra("profileImage", matchImageUrl);
-                        intent.putExtra("preferences", matchPreferences);
+                        intent.putExtra("workout_preference", matchWorkout);
+                        intent.putExtra("experience_preference", matchExperiencePreference);
+                        intent.putExtra("user_experience", matchExperience);
                         intent.putExtra("gallery", matchGallery);
                         context.startActivity(intent);
                     }

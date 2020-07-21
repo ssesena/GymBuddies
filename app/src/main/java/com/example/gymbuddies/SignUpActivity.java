@@ -64,6 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.put("screenName",firstName);
         user.put("gallery", new JSONArray());
         user.put("biography", "");
+        user.put("profileImage", new ParseFile(new File("profile_icon.jpg")));
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
 
