@@ -34,60 +34,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EditProfileFragment extends Fragment {
     ParseUser user = ParseUser.getCurrentUser();
     public static final String TAG = "EditProfileFragment";
     private FragmentEditProfileBinding binding;
     public static final int GALLERY_PHOTO_LIMIT = 6;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public EditProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditProfileFragment newInstance(String param1, String param2) {
-        EditProfileFragment fragment = new EditProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -110,7 +73,6 @@ public class EditProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
-        findMatches();
 
         return binding.getRoot();
     }
@@ -118,6 +80,12 @@ public class EditProfileFragment extends Fragment {
     private void findMatches() {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo("username", user.getUsername());
+        query.whereEqualTo("workout_preference", user.getString("workout_preference"));
+        String[]matchPreferences = findPreferredExperience(user.getString("user_experience"));
+        String[]userPreferences = findPreferredExperience(user.getString("experience_preference"));
+        query.whereContainedIn("experience_preference", Arrays.asList(matchPreferences));
+        query.whereContainedIn("user_experience", Arrays.asList(userPreferences));
+        Log.i(TAG, query.toString());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> matches, ParseException e) {
@@ -233,6 +201,8 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View view) {
                 String value = binding.spPreference.getSelectedItem().toString();
                 changeUserPreferences("workout_preference", value);
+                findMatches();
+
 
             }
         });
@@ -242,6 +212,8 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View view) {
                 String value = binding.spExperience.getSelectedItem().toString();
                 changeUserPreferences("user_experience", value);
+                findMatches();
+
 
             }
         });
@@ -251,6 +223,8 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View view) {
                 String value = binding.spExperiencePreference.getSelectedItem().toString();
                 changeUserPreferences("experience_preference", value);
+                findMatches();
+
 
             }
         });
@@ -360,8 +334,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     private static double findDistance(double lat1, double lon1, double lat2, double lon2) {
-//        double φ1 = lat1 * Math.PI/180, φ2 = lat2 * Math.PI/180, Δλ = (lon2-lon1) * Math.PI/180, R = 6371e3;
-//        double d = Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * R;
         double R = 3958.8; // miles
         double φ1 = lat1 * Math.PI/180; // φ, λ in radians
         double φ2 = lat2 * Math.PI/180;
@@ -376,20 +348,19 @@ public class EditProfileFragment extends Fragment {
         double d = R * c; // in miles
         Log.i(TAG, lat1+","+lon1+","+lat2+","+lon2);
         return d;
+    }
 
-
-//        if ((lat1 == lat2) && (lon1 == lon2)) {
-//            Log.i(TAG, "Returning 0");
-//            return 0;
-//        }
-//        else {
-//            double theta = lon1 - lon2;
-//            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
-//            dist = Math.acos(dist);
-//            dist = Math.toDegrees(dist);
-//            dist = dist * 60 * 1.1515;
-//            return (dist);
-//        }
+    private String[] findPreferredExperience(String experiencePreference){
+        if(experiencePreference.equals("Beginner")){
+            return new String[]{"Beginner", "Intermediate"};
+        }
+        else if(experiencePreference.equals("Intermediate")){
+            return new String[]{"Beginner", "Intermediate", "Advanced"};
+        }
+        else if (experiencePreference.equals("Advanced")){
+            return new String[]{"Intermediate", "Advanced", "Expert"};
+        }
+        return new String[]{"Advanced", "Expert"};
     }
 
 }

@@ -26,4 +26,9 @@
         <item>Advanced</item>
         <item>Expert</item>
     </string-array>
+    <string-array name="filter_options">
+        <item>Closest</item>
+        <item>Preference First</item>
+        <item>Preference Only</item>
+    </string-array>
 </resources>

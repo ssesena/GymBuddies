@@ -38,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+
         binding.btnSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -58,14 +59,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Create the ParseUser
         final ParseUser user = new ParseUser();
+
+
+
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
         user.put("screenName",firstName);
         user.put("gallery", new JSONArray());
         user.put("biography", "");
-        user.put("profileImage", new ParseFile(new File("profile_icon.jpg")));
-        // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
 
             @Override
@@ -89,13 +91,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private File saveToFile() {
         String name = "profileImage";
-//        Bitmap bm = ((BitmapDrawable) R.drawable.ic_baseline_person_24.getDrawable()).getBitmap();
-//        Bitmap bm = BitmapFactory.decodeResource(SignUpActivity.this.getResources(), R.drawable.ic_baseline_person_24);
         Drawable drawable = getResources().getDrawable(R.drawable.ic_baseline_person_24, getTheme());
         Bitmap bm = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(bitmap);
-//        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-//        drawable.draw(canvas);
 
 
 
