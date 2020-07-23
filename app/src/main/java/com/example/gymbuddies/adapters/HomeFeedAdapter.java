@@ -114,15 +114,21 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                 @Override
                 public void done(List<ParseUser> userMatches, ParseException e) {
                     if(e==null && forHomeFeed){
+                        String filterOption = ParseUser.getCurrentUser().getString("filter_option");
                         for(ParseUser userMatch:userMatches) {
                             String matchImageUrl = null;
                             matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
                             String matchBio = userMatch.getString("biography");
                             String matchName = userMatch.getString("screenName");
 
-                            Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
-                            binding.tvHomeBiography.setText(matchBio);
-                            binding.tvHomeScreenName.setText(matchName);
+                            if(filterOption.equals("Closest")){
+                                Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
+                                binding.tvHomeBiography.setText(matchBio);
+                                binding.tvHomeScreenName.setText(matchName);
+                            }
+                            else if(filterOption.equals("Preference Only")){
+                                if()
+                            }
                         }
                     }
                     else if(e==null && !forHomeFeed){
