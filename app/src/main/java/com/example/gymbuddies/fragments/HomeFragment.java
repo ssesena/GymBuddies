@@ -25,7 +25,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +49,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ParseUser.getCurrentUser().fetchInBackground();
-        matches = ParseUser.getCurrentUser().getJSONArray("matches");
+        matches = ParseUser.getCurrentUser().getJSONArray("filtered_matches");
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.filter_options, R.layout.custom_spinner_selected_item);
@@ -62,7 +65,11 @@ public class HomeFragment extends Fragment {
         binding.spinnerHomeFeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l){
+
+                //Get the selected item from the filter options
                 String filterOption = binding.spinnerHomeFeed.getSelectedItem().toString();
+
+                //Save the filter option to Parse
                 user.put("filter_option", filterOption);
                 user.saveInBackground(new SaveCallback() {
                     @Override
@@ -71,6 +78,101 @@ public class HomeFragment extends Fragment {
                             Log.e(TAG, "Error while saving",e);
                             Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
                         }
+
+                        //After changing the filter option, the "filtered_matches" property needs to be updated
+                        updateFilteredMatches();
+                    }
+
+                    //First, Iterate through the JSONObjects in the user's "matches" property
+                    //Second, query the database to find the ParseUser that correlates to each JSONObjects "objectId" property
+                    //Third, Add all of those ParseUsers to a separate ArrayList
+                    //Fourth, Call a different function to choose the order of which ones to display
+
+                    private void updateFilteredMatches() {
+                        final ArrayList<ParseUser> potentialMatches = new ArrayList<>();
+                        final JSONArray matches = user.getJSONArray("matches");
+                        for(int i = 0; i < matches.length(); i++){
+                            JSONObject match = null;
+                            ParseQuery<ParseUser> query = ParseUser.getQuery();
+                            try {
+                                match = matches.getJSONObject(i);
+                                query.whereEqualTo("objectId", match.getString("objectId"));
+                                List<ParseUser> userMatches =  query.find();
+                                potentialMatches.add(userMatches.get(0));
+                            }
+                            catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        sortMatches(potentialMatches);
+                    }
+
+                    private void sortMatches(List<ParseUser> userMatches){
+                        ArrayList<ParseUser> filteredMatches = new ArrayList<>();
+                        ParseUser user = ParseUser.getCurrentUser();
+                        String userFilterOption = user.getString("filter_option");
+                        String userExperience = user.getString("user_experience");
+                        String userExperiencePreference = user.getString("experience_preference");
+
+                        ArrayList<ParseUser> lastMatches = new ArrayList<>();
+                        for(ParseUser userMatch:userMatches) {
+
+                            String matchFilterOption = userMatch.getString("filter_option");
+                            String matchExperience = userMatch.getString("user_experience");
+                            String matchExperiencePreference = userMatch.getString("experience_preference");
+
+
+                            if (userFilterOption.equals("Closest")) {
+                                if (matchFilterOption.equals("Preference Only")) {
+                                    if (matchExperiencePreference.equals(userExperience)) {
+                                        filteredMatches.add(userMatch);
+                                    }
+                                } else {
+                                    filteredMatches.add(userMatch);
+                                }
+                            } else if (userFilterOption.equals("Preference Only")) {
+                                if(userExperiencePreference.equals(matchExperience)){
+                                    if(matchFilterOption.equals("Preference Only")){
+                                        if(matchExperiencePreference.equals(userExperience)){
+                                            filteredMatches.add(userMatch);
+                                        }
+                                    }
+                                    else{
+                                        filteredMatches.add(userMatch);
+                                    }
+                                }
+                            } else if(userFilterOption.equals("Preference First")){
+                                if(matchFilterOption.equals("Preference Only") && !matchExperiencePreference.equals(userExperience)){
+                                    break;
+                                }
+                                else{
+                                    if(userExperiencePreference.equals(matchExperience)){
+                                        filteredMatches.add(userMatch);
+                                    }
+                                    else{
+                                        lastMatches.add(userMatch);
+                                    }
+                                }
+                            }
+                        }
+                        filteredMatches.addAll(lastMatches);
+                        JSONArray matchesToShow = new JSONArray();
+                        for(ParseUser match:filteredMatches){
+                            matchesToShow.put(match);
+                        }
+                        user.put("filtered_matches", matchesToShow);
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e != null){
+                                    Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        });
                     }
                 });
 
