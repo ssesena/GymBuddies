@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ViewProfileActivity"></activity>
+        <activity android:name=".PrivateChatActivity"></activity>
+        <activity android:name=".ViewProfileActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

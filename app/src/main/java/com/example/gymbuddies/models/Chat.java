@@ -38,8 +38,8 @@ public class Chat extends ParseObject {
 
     public void setUsers(ParseUser user, ParseUser match){
         JSONArray users = new JSONArray();
-        users.put(user);
-        users.put(match);
+        users.put(user.getObjectId());
+        users.put(match.getObjectId());
         put(KEY_USERS, users);
     }
 

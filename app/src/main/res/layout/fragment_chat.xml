@@ -6,37 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ChatFragment">
 
-   <ImageView
-       android:layout_width="100dp"
-       android:layout_height="100dp"
-       android:id="@+id/ivChatProfileImage"
-       tools:srcCompat="@tools:sample/avatars"
-       android:layout_marginTop="10dp"
-       android:src="@drawable/ic_baseline_person_24"
-       android:scaleType="centerCrop" />
-
-   <TextView
-       android:id="@+id/tvChatScreenName"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_marginStart="10dp"
-       android:layout_marginTop="10dp"
-       android:layout_toEndOf="@+id/ivChatProfileImage"
-       android:fontFamily="sans-serif-black"
-       android:hint="Name"
-       android:textAppearance="@style/TextAppearance.AppCompat.Large"
-       android:textStyle="bold" />
-
-   <TextView
-       android:id="@+id/tvChatScreenMessage"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_below="@+id/tvChatScreenName"
-       android:layout_marginStart="10dp"
-       android:layout_marginTop="10dp"
-       android:layout_toEndOf="@+id/ivChatProfileImage"
-       android:fontFamily="sans-serif"
-       android:hint="Preview of Message"
-       android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/rvChatPreviews"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
 </RelativeLayout>
