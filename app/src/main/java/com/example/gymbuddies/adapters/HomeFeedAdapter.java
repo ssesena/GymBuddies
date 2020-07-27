@@ -150,79 +150,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
-
-//                private void showMatch(String matchImageUrl, String matchBio, String matchName){
-//                    Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
-//                    binding.tvHomeBiography.setText(matchBio);
-//                    binding.tvHomeScreenName.setText(matchName);
-//                }
-
-//                private void sortMatches(List<ParseUser> userMatches){
-//                    ParseUser user = ParseUser.getCurrentUser();
-//                    String userFilterOption = user.getString("filter_option");
-//                    String userExperience = user.getString("user_experience");
-//                    String userExperiencePreference = user.getString("experience_preference");
-//
-//                    ArrayList<ParseUser> lastMatches = new ArrayList<>();
-//                    for(ParseUser userMatch:userMatches) {
-//
-//                        String matchFilterOption = userMatch.getString("filter_option");
-//                        String matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
-//                        String matchBio = userMatch.getString("biography");
-//                        String matchName = userMatch.getString("screenName");
-//                        String matchExperience = userMatch.getString("user_experience");
-//                        String matchExperiencePreference = userMatch.getString("experience_preference");
-//
-//
-//                        if (userFilterOption.equals("Closest")) {
-//                            Log.i(TAG, "closest");
-//                            if (matchFilterOption.equals("Preference Only")) {
-//                                if (matchExperiencePreference.equals(userExperience)) {
-//                                    showMatch(matchImageUrl, matchBio, matchName);
-//                                }
-//                            } else {
-//                                showMatch(matchImageUrl, matchBio, matchName);
-//                            }
-//                        } else if (userFilterOption.equals("Preference Only")) {
-//                            Log.i(TAG, "only");
-//                            if(userExperiencePreference.equals(matchExperience)){
-//                                if(matchFilterOption.equals("Preference Only")){
-//                                    if(matchExperiencePreference.equals(userExperience)){
-//                                        showMatch(matchImageUrl, matchBio, matchName);
-//                                    }
-//                                }
-//                                else{
-//                                    showMatch(matchImageUrl, matchBio, matchName);
-//                                }
-//                            }
-//                        } else if(userFilterOption.equals("Preference First")){
-//                            Log.i(TAG, "first");
-//                            if(matchFilterOption.equals("Preference Only") && !matchExperiencePreference.equals(userExperience)){
-//                                break;
-//                            }
-//                            else{
-//                                if(userExperiencePreference.equals(matchExperience)){
-//                                    Log.i(TAG, matchName+" matching");
-//                                    showMatch(matchImageUrl, matchBio, matchName);
-//                                }
-//                                else{
-//                                    Log.i(TAG, matchName + " not matching");
-//                                    lastMatches.add(userMatch);
-//                                }
-//                            }
-//                        }
-//                    }
-//                    for(ParseUser userMatch:lastMatches){
-//
-//                        String matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
-//                        String matchBio = userMatch.getString("biography");
-//                        String matchName = userMatch.getString("screenName");
-//
-//                        showMatch(matchImageUrl, matchBio, matchName);
-//                    }
-//                }
             });
-
         }
 
         public void clear(){
