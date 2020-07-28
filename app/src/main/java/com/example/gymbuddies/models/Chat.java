@@ -44,10 +44,13 @@ public class Chat extends ParseObject {
     }
 
     public void addMessage(ParseUser user, String message) throws JSONException {
+
+        //Need to create a JSON object to keep track of message, the author, and the author's profileIamge for displaying to the user if possible
         JSONArray allMessages = getMessages();
         JSONObject messageObject = new JSONObject();
         messageObject.put("user_id", user.getObjectId());
         messageObject.put("message", message);
+        messageObject.put("profileImageUrl",user.getParseFile("profileImage").getUrl());
 
         //Finding the current time and adding that to message object to display messages in correct order
         Date date = new Date(System.currentTimeMillis());

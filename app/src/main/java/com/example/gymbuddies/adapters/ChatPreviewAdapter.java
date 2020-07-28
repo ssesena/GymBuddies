@@ -59,8 +59,6 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                         e.printStackTrace();
                     }
 //                    holder.displayMatch(clickedMatch, false);
-
-
                 }
             }
         });
