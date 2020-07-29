@@ -1,6 +1,7 @@
 package com.example.gymbuddies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.gymbuddies.PrivateChatActivity;
 import com.example.gymbuddies.databinding.ItemChatPreviewBinding;
 import com.example.gymbuddies.databinding.ItemHomeMatchProfileBinding;
 import com.example.gymbuddies.models.Chat;
@@ -52,12 +54,26 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
             public void onClick(View view) {
                 Log.i(TAG, "Clicked!");
                 if(position != RecyclerView.NO_POSITION){
-                    JSONObject clickedMatch = null;
+                    JSONObject clickedChat = null;
                     try {
-                        clickedMatch = chats.getJSONObject(position);
+
+                        //Getting information from clicked chat
+                        clickedChat = chats.getJSONObject(position);
+                        final String matchId = clickedChat.getString("matchId");
+                        final Boolean isNewChat = false;
+                        String chatId = clickedChat.getString("chatId");
+
+                        //Starting Private Chat activity
+                        Intent intent = new Intent(context, PrivateChatActivity.class);
+                        intent.putExtra("matchId", matchId);
+                        intent.putExtra("isNewChat", isNewChat);
+                        intent.putExtra("chatId", chatId);
+                        context.startActivity(intent);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
 //                    holder.displayMatch(clickedMatch, false);
                 }
             }

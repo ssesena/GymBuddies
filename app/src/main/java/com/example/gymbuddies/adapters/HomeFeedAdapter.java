@@ -135,6 +135,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         String matchExperiencePreference = userMatch.getString("experience_preference");
                         String matchExperience = userMatch.getString("user_experience");
                         String matchGallery = userMatch.getJSONArray("gallery").toString();
+                        String matchId = userMatch.getObjectId();
+                        Log.i(TAG, matchId);
 
                         Intent intent = new Intent(context, ViewProfileActivity.class);
                         intent.putExtra("screenName",matchName);
@@ -144,6 +146,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         intent.putExtra("experience_preference", matchExperiencePreference);
                         intent.putExtra("user_experience", matchExperience);
                         intent.putExtra("gallery", matchGallery);
+                        intent.putExtra("matchId", matchId);
                         context.startActivity(intent);
                     }
                     else{

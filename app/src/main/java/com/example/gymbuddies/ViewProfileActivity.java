@@ -37,6 +37,13 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         //Getting intent from either home fee or edit profile screen
         Intent intent = getIntent();
+        String matchId = intent.getStringExtra("matchId");
+        if(matchId == null){
+            Log.i(TAG, "matchId is null");
+        }
+        else{
+            Log.i(TAG, "matchId is not null");
+        }
 
         //Getting a boolean value to determine whether or not to display the user or match screen
         Boolean userProfile = intent.getBooleanExtra(EditProfileFragment.class.getSimpleName(), false);
@@ -79,11 +86,10 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.tvViewProfileScreenName.setText(userName);
             Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
         }
-
-        setOnCLickListeners();
+        setOnCLickListeners(matchId);
     }
 
-    private void setOnCLickListeners() {
+    private void setOnCLickListeners(final String matchId) {
         binding.ivBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,6 +112,19 @@ public class ViewProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if(matchId != null) {
+            binding.btnStartPrivateChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(ViewProfileActivity.this, PrivateChatActivity.class);
+                    intent.putExtra("matchId", matchId);
+                    Log.i(TAG, matchId);
+                    intent.putExtra("isNewChat", true);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void showNextImage(Boolean next) throws JSONException {

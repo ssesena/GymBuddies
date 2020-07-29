@@ -15,6 +15,7 @@ import com.example.gymbuddies.fragments.ChatFragment;
 import com.example.gymbuddies.fragments.EditProfileFragment;
 import com.example.gymbuddies.fragments.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.Parse;
 
 public class MainActivity extends AppCompatActivity {
 

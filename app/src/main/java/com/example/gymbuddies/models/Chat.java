@@ -1,6 +1,7 @@
 package com.example.gymbuddies.models;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -21,7 +22,6 @@ public class Chat extends ParseObject {
     public static final String KEY_MESSAGES = "messages";
 
     public Chat(){
-
     }
 
     public JSONArray getUsers(){
@@ -32,21 +32,22 @@ public class Chat extends ParseObject {
         return getJSONArray(KEY_MESSAGES);
     }
 
-    public Date getUpdatedAt(){
-        return getUpdatedAt();
-    }
-
-    public void setUsers(ParseUser user, ParseUser match){
+    public void setUsers(String matchId){
         JSONArray users = new JSONArray();
+        ParseUser user =ParseUser.getCurrentUser();
         users.put(user.getObjectId());
-        users.put(match.getObjectId());
+        users.put(matchId);
         put(KEY_USERS, users);
     }
 
-    public void addMessage(ParseUser user, String message) throws JSONException {
+    public Date addMessage(ParseUser user, String message) throws JSONException {
 
         //Need to create a JSON object to keep track of message, the author, and the author's profileIamge for displaying to the user if possible
         JSONArray allMessages = getMessages();
+        if(allMessages ==  null){
+            allMessages = new JSONArray();
+        }
+
         JSONObject messageObject = new JSONObject();
         messageObject.put("user_id", user.getObjectId());
         messageObject.put("message", message);
@@ -56,6 +57,7 @@ public class Chat extends ParseObject {
         Date date = new Date(System.currentTimeMillis());
         messageObject.put("createdAt", date);
         allMessages.put(messageObject);
+        return date;
     }
 
 }
