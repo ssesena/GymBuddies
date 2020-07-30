@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.gymbuddies.adapters.ChatPreviewAdapter;
 import com.example.gymbuddies.adapters.MessageAdapter;
 import com.example.gymbuddies.databinding.ActivityPrivateChatBinding;
 import com.example.gymbuddies.models.Chat;
@@ -20,6 +21,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.Date;
 
@@ -41,23 +43,23 @@ public class PrivateChatActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-
         Intent intent = getIntent();
 
         //Retrieving info from previous activity or fragment
         final String matchId = intent.getStringExtra("matchId");
-        Log.i(TAG, matchId);
+//        Log.i(TAG, matchId);
         final Boolean isNewChat = intent.getBooleanExtra("isNewChat", false);
+        Chat chat = null;
+        String chatId = null;
 
         if(isNewChat){
             Log.i(TAG, "Chat did not exist");
         }
         else{
             Log.i(TAG, "Chat already exists");
-        }
-        String chatId = null;
-        if(!isNewChat){
-            chatId = intent.getStringExtra("chatId");
+            chat = (Chat) Parcels.unwrap(intent.getParcelableExtra(ChatPreviewAdapter.class.getSimpleName()));
+            chatId = chat.getObjectId();
+            messages = chat.getMessages();
         }
 
         binding.rvMessages.setHasFixedSize(true);
@@ -100,34 +102,34 @@ public class PrivateChatActivity extends AppCompatActivity {
         //First Check if a chat between the user an their match already exists
 
         //If it does not exist, I need to create a new Chat Object, add that chat object to the user and match's chats, and finally add the message
-        ParseUser match = findMatch(matchId);
+//        ParseUser match = findMatch(matchId);
         Chat chat = null;
         if(isNewChat){
             chat = new Chat();
             chat.setUsers(matchId);
-            chat.save();
-            chatId = chat.getObjectId();
+//            chat.save();
+//            chatId = chat.getObjectId();
+//
+//            Log.i(TAG, "ChatId: "+ chatId);
+//
+//            JSONObject newChat = new JSONObject();
 
-            Log.i(TAG, "ChatId: "+ chatId);
-
-            JSONObject newChat = new JSONObject();
-
-            //Adding the new chat to the user's list of chats
-            JSONArray userChats = user.getJSONArray("chats");
-            newChat.put("chatId", chatId);
-            newChat.put("matchId", matchId);
-            userChats.put(newChat);
-            user.put("chats", userChats);
-            Log.i(TAG,"User's Chats: " + userChats.toString());
-
-
-            //Adding the new chat to the match's list of chats
-            JSONArray matchChats = match.getJSONArray("chats");
-            newChat.put("chatId", chatId);
-            newChat.put("matchId", user.getObjectId());
-            matchChats.put(newChat);
-            match.put("chats", matchChats);
-            Log.i(TAG,"Match Chats: "+matchChats.toString());
+//            //Adding the new chat to the user's list of chats
+//            JSONArray userChats = user.getJSONArray("chats");
+//            newChat.put("chatId", chatId);
+//            newChat.put("matchId", matchId);
+//            userChats.put(newChat);
+//            user.put("chats", userChats);
+//            Log.i(TAG,"User's Chats: " + userChats.toString());
+//
+//
+//            //Adding the new chat to the match's list of chats
+//            JSONArray matchChats = match.getJSONArray("chats");
+//            newChat.put("chatId", chatId);
+//            newChat.put("matchId", user.getObjectId());
+//            matchChats.put(newChat);
+//            match.put("chats", matchChats);
+//            Log.i(TAG,"Match Chats: "+matchChats.toString());
 
         }
         //If It does exist all I need to do is add the message using the method addMessage and save it in the background
@@ -141,8 +143,8 @@ public class PrivateChatActivity extends AppCompatActivity {
         chat.save();
 
         //I also have to make sure to update the order of the user's current chats
-        orderChats(user, chat);
-        orderChats(match, chat);
+//        orderChats(user, chat);
+//        orderChats(match, chat);
     }
 
     private void orderChats(ParseUser newUser, Chat chat) throws JSONException, ParseException {

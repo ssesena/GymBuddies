@@ -62,6 +62,14 @@ public class HomeFragment extends Fragment {
 
         final ParseUser user = ParseUser.getCurrentUser();
 
+        if(user.getJSONArray("matches") == null){
+            user.put("matches", new JSONArray());
+            try {
+                user.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         binding.spinnerHomeFeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l){

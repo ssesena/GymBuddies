@@ -6,16 +6,17 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/ivMatchMessageProfileImage"
+        android:id="@+id/ivMessageProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        tools:srcCompat="@tools:sample/avatars"/>
+        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ivMatchMessageProfileImage"
+        android:layout_toRightOf="@+id/ivMessageProfileImage"
         android:layout_marginLeft="5dp"
         android:textSize="18sp"
         android:padding="8dp"

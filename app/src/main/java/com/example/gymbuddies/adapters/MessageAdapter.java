@@ -2,6 +2,7 @@ package com.example.gymbuddies.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public static final int MSG_TYPE_USER = 0;
     public static final int MSG_TYPE_MATCH = 1;
+
+    public static final String TAG = "MessageAdapter";
 
     Context context;
     JSONArray messages;
@@ -95,17 +98,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvMessage = itemView.findViewById(R.id.tvMessage);
-            if(itemView.getId() != R.layout.user_message){
-                ivProfileImage = itemView.findViewById(R.id.ivMatchMessageProfileImage);
-                isUserMessage = false;
-            }
+            ivProfileImage = itemView.findViewById(R.id.ivMessageProfileImage);
         }
 
         @SuppressLint("CheckResult")
         public void bind(JSONObject message) throws JSONException {
-            if(!isUserMessage){
-                Glide.with(context).load(message.getString("profileImageUrl"));
-            }
+
+            Glide.with(context).load(message.getString("profileImageUrl")).into(ivProfileImage);
             tvMessage.setText(message.getString("message"));
         }
 

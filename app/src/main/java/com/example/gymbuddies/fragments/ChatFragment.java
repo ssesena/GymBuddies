@@ -15,15 +15,23 @@ import com.example.gymbuddies.R;
 import com.example.gymbuddies.adapters.ChatPreviewAdapter;
 import com.example.gymbuddies.adapters.MessageAdapter;
 import com.example.gymbuddies.databinding.FragmentChatBinding;
+import com.example.gymbuddies.models.Chat;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.parse.Parse.getApplicationContext;
 
 
 public class ChatFragment extends Fragment {
     ChatPreviewAdapter chatPreviewAdapter;
-    JSONArray chats;
+    List<Chat> chats;
 
     RecyclerView rvChats;
 
@@ -39,6 +47,12 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(getLayoutInflater());
 
+        try {
+            chats = findChats();
+        } catch (ParseException | JSONException e) {
+            e.printStackTrace();
+        }
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvChatPreviews.setLayoutManager(linearLayoutManager);
@@ -47,5 +61,27 @@ public class ChatFragment extends Fragment {
         binding.rvChatPreviews.setAdapter(chatPreviewAdapter);
 
         return binding.getRoot();
+    }
+
+    private List<Chat> findChats() throws ParseException, JSONException {
+
+        //Get userId and find chats user is part of
+        ArrayList<Chat> usersChats = new ArrayList<>();
+        ParseUser user = ParseUser.getCurrentUser();
+        String userId = user.getObjectId();
+
+        //Find all current chats between all users in order of most recent
+        ParseQuery<Chat> query = ParseQuery.getQuery(Chat.class);
+        query.addDescendingOrder(Chat.KEY_UPDATED_AT);
+        List<Chat> allChats = query.find();
+
+        for(Chat chat:allChats){
+            JSONArray chatUsers = chat.getJSONArray("users");
+            if(userId.equals(chatUsers.getString(0)) || userId.equals(chatUsers.getString(1))){
+                usersChats.add(chat);
+            }
+        }
+
+        return usersChats;
     }
 }

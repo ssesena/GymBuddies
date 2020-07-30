@@ -40,7 +40,7 @@ public class Chat extends ParseObject {
         put(KEY_USERS, users);
     }
 
-    public Date addMessage(ParseUser user, String message) throws JSONException {
+    public void addMessage(ParseUser user, String message) throws JSONException {
 
         //Need to create a JSON object to keep track of message, the author, and the author's profileIamge for displaying to the user if possible
         JSONArray allMessages = getMessages();
@@ -57,7 +57,7 @@ public class Chat extends ParseObject {
         Date date = new Date(System.currentTimeMillis());
         messageObject.put("createdAt", date);
         allMessages.put(messageObject);
-        return date;
+        this.put(KEY_MESSAGES, allMessages);
     }
 
 }
