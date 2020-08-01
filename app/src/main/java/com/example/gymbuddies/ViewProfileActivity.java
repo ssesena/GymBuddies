@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.ActivityViewProfileBinding;
 import com.example.gymbuddies.fragments.EditProfileFragment;
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 public class ViewProfileActivity extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     JSONArray matchGallery = null;
     String matchProfileImageUrl = null;
     public static final String TAG = "ViewProfileActivity";
+    ParseUser match;
 
 
     @Override
@@ -60,6 +63,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.tvViewProfileExperience.setText(userExperience);
             try {
                 matchGallery = new JSONArray(intent.getStringExtra("gallery"));
+                match = (ParseUser) Parcels.unwrap(intent.getParcelableExtra(HomeFeedAdapter.class.getSimpleName()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -125,6 +129,15 @@ public class ViewProfileActivity extends AppCompatActivity {
                 }
             });
         }
+
+        binding.btnFindGyms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ViewProfileActivity.this, GymMapActivity.class);
+                intent.putExtra(ViewProfileActivity.class.getSimpleName(), Parcels.wrap(match));
+                startActivity(intent);
+            }
+        });
     }
 
     private void showNextImage(Boolean next) throws JSONException {

@@ -24,6 +24,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,6 +148,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         intent.putExtra("user_experience", matchExperience);
                         intent.putExtra("gallery", matchGallery);
                         intent.putExtra("matchId", matchId);
+                        intent.putExtra(HomeFeedAdapter.class.getSimpleName(), Parcels.wrap(userMatch));
                         context.startActivity(intent);
                     }
                     else{
