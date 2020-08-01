@@ -138,7 +138,7 @@ public class GymMapActivity extends AppCompatActivity {
                         double gymLat = gym.getJSONObject("location").getDouble("lat");
                         double gymLon = gym.getJSONObject("location").getDouble("lng");
                         JSONArray addressInfo = gym.getJSONObject("location").getJSONArray("formattedAddress");
-                        String finalAddress = addressInfo.getString(0)+"\n"+addressInfo.getString(1);
+                        String finalAddress = addressInfo.getString(0)+", "+addressInfo.getString(1);
                         // listingPosition is a LatLng point
                         LatLng listingPosition = new LatLng(gymLat, gymLon);
                         // Create the marker on the fragment
