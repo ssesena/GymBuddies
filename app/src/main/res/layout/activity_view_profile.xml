@@ -7,12 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ViewProfileActivity">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/ivViewProfileImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         tools:srcCompat="@tools:sample/avatars"
         android:scaleType="centerCrop"/>
+
+
 
     <ImageView
         android:id="@+id/ivBackArrow"

@@ -3,14 +3,22 @@ package com.example.gymbuddies;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.ActivityViewProfileBinding;
 import com.example.gymbuddies.fragments.EditProfileFragment;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.gson.Gson;
 import com.parse.ParseUser;
 
@@ -27,7 +35,10 @@ public class ViewProfileActivity extends AppCompatActivity {
     String matchProfileImageUrl = null;
     public static final String TAG = "ViewProfileActivity";
     ParseUser match;
-
+    Matrix matrix = new Matrix();
+    float scale = 1f;
+    ScaleGestureDetector scaleGestureDetector;
+    PhotoViewAttacher photoViewAttacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,15 @@ public class ViewProfileActivity extends AppCompatActivity {
         binding = ActivityViewProfileBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        Animation right_to_left_in = AnimationUtils.loadAnimation(this, R.anim.right_to_left_in);
+        Animation right_to_left_out = AnimationUtils.loadAnimation(this, R.anim.right_to_left_out);
+        Animation left_to_right_in = AnimationUtils.loadAnimation(this, R.anim.left_to_right_in);
+        Animation left_to_right_out = AnimationUtils.loadAnimation(this, R.anim.left_to_right_out);
+//        binding.isImageSlideLeft.setInAnimation(right_to_left_in);
+//        binding.isImageSlideLeft.setOutAnimation(right_to_left_out);
+//        binding.isImageSlideRight.setOutAnimation(left_to_right_out);
+//        binding.isImageSlideRight.setInAnimation(left_to_right_in);
 
         photoIndex = -1;
 
@@ -92,6 +112,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
         setOnCLickListeners(matchId);
     }
+
 
     private void setOnCLickListeners(final String matchId) {
         binding.ivBackArrow.setOnClickListener(new View.OnClickListener() {
