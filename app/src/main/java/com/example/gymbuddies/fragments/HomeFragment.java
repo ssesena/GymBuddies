@@ -1,7 +1,19 @@
 package com.example.gymbuddies.fragments;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -18,7 +30,13 @@ import android.widget.Toast;
 import com.example.gymbuddies.R;
 import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.FragmentHomeBinding;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -38,6 +56,11 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding binding;
     HomeFeedAdapter homeFeedAdapter;
     JSONArray matches;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    Boolean mLocationPermissionGranted = false;
+    public static final int ERROR_DIALOG_REQUEST = 9001;
+    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
+    public static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,9 +71,15 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final ParseUser user = ParseUser.getCurrentUser();
         ParseUser.getCurrentUser().fetchInBackground();
         matches = ParseUser.getCurrentUser().getJSONArray("filtered_matches");
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
+
+        Log.i(TAG, user.getString("location"));
+
+        //For getting the user's current location
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.filter_options, R.layout.custom_spinner_selected_item);
         adapter.setDropDownViewResource(R.layout.spinner_item1);
@@ -60,9 +89,7 @@ public class HomeFragment extends Fragment {
         binding.rvHomeMatchProfiles.setAdapter(homeFeedAdapter);
         binding.rvHomeMatchProfiles.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final ParseUser user = ParseUser.getCurrentUser();
-
-        if(user.getJSONArray("matches") == null){
+        if (user.getJSONArray("matches") == null) {
             user.put("matches", new JSONArray());
             try {
                 user.save();
@@ -72,7 +99,7 @@ public class HomeFragment extends Fragment {
         }
         binding.spinnerHomeFeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l){
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 //Get the selected item from the filter options
                 String filterOption = binding.spinnerHomeFeed.getSelectedItem().toString();
@@ -82,8 +109,8 @@ public class HomeFragment extends Fragment {
                 user.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if(e!=null){
-                            Log.e(TAG, "Error while saving",e);
+                        if (e != null) {
+                            Log.e(TAG, "Error while saving", e);
                             Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
                         }
 
@@ -99,16 +126,15 @@ public class HomeFragment extends Fragment {
                     private void updateFilteredMatches() {
                         final ArrayList<ParseUser> potentialMatches = new ArrayList<>();
                         final JSONArray matches = user.getJSONArray("matches");
-                        for(int i = 0; i < matches.length(); i++){
+                        for (int i = 0; i < matches.length(); i++) {
                             JSONObject match = null;
                             ParseQuery<ParseUser> query = ParseUser.getQuery();
                             try {
                                 match = matches.getJSONObject(i);
                                 query.whereEqualTo("objectId", match.getString("objectId"));
-                                List<ParseUser> userMatches =  query.find();
+                                List<ParseUser> userMatches = query.find();
                                 potentialMatches.add(userMatches.get(0));
-                            }
-                            catch (JSONException e) {
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             } catch (ParseException e) {
                                 e.printStackTrace();
@@ -118,7 +144,7 @@ public class HomeFragment extends Fragment {
                         sortMatches(potentialMatches);
                     }
 
-                    private void sortMatches(List<ParseUser> userMatches){
+                    private void sortMatches(List<ParseUser> userMatches) {
                         ArrayList<ParseUser> filteredMatches = new ArrayList<>();
                         ParseUser user = ParseUser.getCurrentUser();
                         String userFilterOption = user.getString("filter_option");
@@ -126,7 +152,7 @@ public class HomeFragment extends Fragment {
                         String userExperiencePreference = user.getString("experience_preference");
 
                         ArrayList<ParseUser> lastMatches = new ArrayList<>();
-                        for(ParseUser userMatch:userMatches) {
+                        for (ParseUser userMatch : userMatches) {
 
                             String matchFilterOption = userMatch.getString("filter_option");
                             String matchExperience = userMatch.getString("user_experience");
@@ -142,25 +168,22 @@ public class HomeFragment extends Fragment {
                                     filteredMatches.add(userMatch);
                                 }
                             } else if (userFilterOption.equals("Preference Only")) {
-                                if(userExperiencePreference.equals(matchExperience)){
-                                    if(matchFilterOption.equals("Preference Only")){
-                                        if(matchExperiencePreference.equals(userExperience)){
+                                if (userExperiencePreference.equals(matchExperience)) {
+                                    if (matchFilterOption.equals("Preference Only")) {
+                                        if (matchExperiencePreference.equals(userExperience)) {
                                             filteredMatches.add(userMatch);
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         filteredMatches.add(userMatch);
                                     }
                                 }
-                            } else if(userFilterOption.equals("Preference First")){
-                                if(matchFilterOption.equals("Preference Only") && !matchExperiencePreference.equals(userExperience)){
+                            } else if (userFilterOption.equals("Preference First")) {
+                                if (matchFilterOption.equals("Preference Only") && !matchExperiencePreference.equals(userExperience)) {
                                     break;
-                                }
-                                else{
-                                    if(userExperiencePreference.equals(matchExperience)){
+                                } else {
+                                    if (userExperiencePreference.equals(matchExperience)) {
                                         filteredMatches.add(userMatch);
-                                    }
-                                    else{
+                                    } else {
                                         lastMatches.add(userMatch);
                                     }
                                 }
@@ -168,14 +191,14 @@ public class HomeFragment extends Fragment {
                         }
                         filteredMatches.addAll(lastMatches);
                         JSONArray matchesToShow = new JSONArray();
-                        for(ParseUser match:filteredMatches){
+                        for (ParseUser match : filteredMatches) {
                             matchesToShow.put(match);
                         }
                         user.put("filtered_matches", matchesToShow);
                         user.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                if(e != null){
+                                if (e != null) {
                                     Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -194,7 +217,50 @@ public class HomeFragment extends Fragment {
 
         setSpinnerToValue(binding.spinnerHomeFeed, user.getString("filter_option"));
 
+        binding.btnUpdateLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission( getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    Log.i(TAG, "Permission denied");
+                    return;
+                }
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            updateLocation(location);
+                        }
+                    }
+                });
+            }
+        });
+
         return binding.getRoot();
+    }
+
+    private void updateLocation(Location location) {
+        final ParseUser user = ParseUser.getCurrentUser();
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+        user.put("location", latitude+" "+longitude);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null){
+                    Toast.makeText(getContext(), "Issue updating location", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, e.toString());
+                }
+                Log.i(TAG, user.getString("location"));
+            }
+        });
     }
 
     public void setSpinnerToValue(Spinner spinner, String value) {
@@ -209,4 +275,100 @@ public class HomeFragment extends Fragment {
         spinner.setSelection(index);
     }
 
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(getContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+    }
+
+    private boolean checkMapServices(){
+        if(isServicesOK()){
+            if(isMapsEnabled()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public boolean isMapsEnabled(){
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isServicesOK(){
+        Log.d(TAG, "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d(TAG, "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(getContext(), "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(checkMapServices()){
+            if(!mLocationPermissionGranted){
+                getLocationPermission();
+            }
+        }
+    }
 }

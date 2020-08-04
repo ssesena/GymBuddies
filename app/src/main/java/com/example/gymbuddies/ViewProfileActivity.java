@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.ActivityViewProfileBinding;
 import com.example.gymbuddies.fragments.EditProfileFragment;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.google.gson.Gson;
 import com.parse.ParseUser;
@@ -39,6 +40,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     float scale = 1f;
     ScaleGestureDetector scaleGestureDetector;
     PhotoViewAttacher photoViewAttacher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
         setOnCLickListeners(matchId);
     }
+
+//    private void flipperImages(PhotoView photoView){
+//
+//    }
 
 
     private void setOnCLickListeners(final String matchId) {
