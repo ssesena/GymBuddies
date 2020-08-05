@@ -310,15 +310,20 @@ public class EditProfileFragment extends Fragment {
 
     private void changeUserPreferences(String property, String value) {
         user.put(property, value);
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-            if(e!=null){
-                Log.e(TAG, "Error while saving",e);
-                Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
-            }
-            }
-        });
+//        user.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//            if(e!=null){
+//                Log.e(TAG, "Error while saving",e);
+//                Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
+//            }
+//            }
+//        });
+        try {
+            user.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setSpinnerToValue(Spinner spinner, String value) {

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.gymbuddies.ViewProfileActivity;
 import com.example.gymbuddies.databinding.ItemHomeMatchProfileBinding;
 import com.parse.FindCallback;
@@ -89,6 +90,18 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             return matches.length();
         }
         return 0;
+    }
+
+    public void clear() {
+        matches = new JSONArray();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(JSONArray newMatches) throws JSONException {
+        for(int i = 0; i < newMatches.length(); i++){
+            matches.put(newMatches.getJSONObject(i));
+        }
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

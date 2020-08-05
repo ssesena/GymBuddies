@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
         //For getting the user's current location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.filter_options, R.layout.custom_spinner_selected_item);
+        final ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.filter_options, R.layout.custom_spinner_selected_item);
         adapter.setDropDownViewResource(R.layout.spinner_item1);
 
         binding.spinnerHomeFeed.setAdapter(adapter);
@@ -116,6 +116,12 @@ public class HomeFragment extends Fragment {
 
                         //After changing the filter option, the "filtered_matches" property needs to be updated
                         updateFilteredMatches();
+                        homeFeedAdapter.clear();
+                        try {
+                            homeFeedAdapter.addAll(user.getJSONArray("filtered_matches"));
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
                     }
 
                     //First, Iterate through the JSONObjects in the user's "matches" property

@@ -12,9 +12,12 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterViewFlipper;
 import android.widget.ImageSwitcher;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.gymbuddies.adapters.FlipperAdapter;
 import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.ActivityViewProfileBinding;
 import com.example.gymbuddies.fragments.EditProfileFragment;
@@ -40,6 +43,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     float scale = 1f;
     ScaleGestureDetector scaleGestureDetector;
     PhotoViewAttacher photoViewAttacher;
+
 
 
     @Override
@@ -70,6 +74,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             Log.i(TAG, "matchId is not null");
         }
 
+        JSONArray allPhotos = null;
+
         //Getting a boolean value to determine whether or not to display the user or match screen
         Boolean userProfile = intent.getBooleanExtra(EditProfileFragment.class.getSimpleName(), false);
         if(!userProfile) {
@@ -91,7 +97,14 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
             binding.tvViewProfileBiography.setText(matchBio);
             binding.tvViewProfileScreenName.setText(matchName);
-            Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
+//            Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
+
+            try {
+                allPhotos = getAllPhotos(matchProfileImageUrl, matchGallery);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
         else {
 
@@ -110,9 +123,29 @@ public class ViewProfileActivity extends AppCompatActivity {
             matchGallery = user.getJSONArray("gallery");
             binding.tvViewProfileBiography.setText(userBio);
             binding.tvViewProfileScreenName.setText(userName);
-            Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
+//            Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
+
+            try {
+                allPhotos = getAllPhotos(matchProfileImageUrl, matchGallery);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
         setOnCLickListeners(matchId);
+        FlipperAdapter flipperAdapter = new FlipperAdapter(this, allPhotos);
+        binding.adapterViewFlipper.setAdapter(flipperAdapter);
+    }
+
+    private JSONArray getAllPhotos(String profileImageUrl, JSONArray gallery) throws JSONException {
+        JSONObject photo = new JSONObject();
+        photo.put("url", profileImageUrl);
+        JSONArray finalPhotos = new JSONArray();
+        finalPhotos.put(photo);
+        for(int i = 0; i < gallery.length(); i++){
+            finalPhotos.put(gallery.getJSONObject(i));
+        }
+        return finalPhotos;
     }
 
 //    private void flipperImages(PhotoView photoView){
@@ -121,28 +154,28 @@ public class ViewProfileActivity extends AppCompatActivity {
 
 
     private void setOnCLickListeners(final String matchId) {
-        binding.ivBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean next = false;
-                try {
-                    showNextImage(next);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        binding.ivForwardArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean next = true;
-                try {
-                    showNextImage(next);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        binding.ivBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Boolean next = false;
+//                try {
+//                    showNextImage(next);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//        binding.ivForwardArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Boolean next = true;
+//                try {
+//                    showNextImage(next);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
         if(matchId != null) {
             binding.btnStartPrivateChat.setOnClickListener(new View.OnClickListener() {
@@ -167,27 +200,35 @@ public class ViewProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void showNextImage(Boolean next) throws JSONException {
-        if(next){
-            photoIndex++;
-            if(photoIndex < matchGallery.length()){
-                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
-                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
-            }
-            else{
-                photoIndex--;
-            }
-        }
-        else{
-            photoIndex--;
-            if(photoIndex < 0){
-                Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
-                photoIndex = -1;
-            }
-            else{
-                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
-                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
-            }
-        }
+//    private void showNextImage(Boolean next) throws JSONException {
+//        if(next){
+//            photoIndex++;
+//            if(photoIndex < matchGallery.length()){
+//                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
+//                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
+//            }
+//            else{
+//                photoIndex--;
+//            }
+//        }
+//        else{
+//            photoIndex--;
+//            if(photoIndex < 0){
+//                Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
+//                photoIndex = -1;
+//            }
+//            else{
+//                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
+//                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
+//            }
+//        }
+//    }
+
+    public void onPrevClicked(View view){
+        binding.adapterViewFlipper.showPrevious();
+    }
+
+    public void onNextClicked(View view){
+        binding.adapterViewFlipper.showNext();
     }
 }
