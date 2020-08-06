@@ -238,24 +238,11 @@ public class HomeFragment extends Fragment {
 
         setSpinnerToValue(binding.spinnerHomeFeed, user.getString("filter_option"));
 
-//        getLocation();
-
-//        binding.btnUpdateLocation.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getLocation();
-////                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-////                    @Override
-////                    public void onSuccess(Location location) {
-////                        // Got last known location. In some rare situations this can be null.
-////                        if (location != null) {
-////                            Log.i(TAG, "Got Location!");
-////                            updateLocation(location);
-////                        }
-////                    }
-////                });
-//            }
-//        });
+        String workout = user.getString("workout_preference");
+        if(workout.equals("Buddy")){
+            workout = "Buddie";
+        }
+        binding.tvCurrentWorkoutPreference.setText(workout+"s");
 
         return binding.getRoot();
     }

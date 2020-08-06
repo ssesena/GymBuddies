@@ -133,11 +133,12 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         String matchImageUrl = userMatch.getParseFile("profileImage").getUrl();
                         String matchBio = userMatch.getString("biography");
                         String matchName = userMatch.getString("screenName");
+                        String matchExperience = userMatch.getString("user_experience");
 
-
-                        Glide.with(context).load(matchImageUrl).into(binding.ivHomeProfileImage);
+                        Glide.with(context).load(matchImageUrl).circleCrop().into(binding.ivHomeProfileImage);
                         binding.tvHomeBiography.setText(matchBio);
                         binding.tvHomeScreenName.setText(matchName);
+                        binding.tvHomeExperience.setText(matchExperience);
                     }
                     else if(e==null && !forHomeFeed){
                         ParseUser userMatch = userMatches.get(0);

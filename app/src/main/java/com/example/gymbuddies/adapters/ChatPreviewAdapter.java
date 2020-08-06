@@ -144,7 +144,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                     String matchImageUrl = match.getParseFile("profileImage").getUrl();
 
                     binding.tvChatScreenName.setText(matchName);
-                    Glide.with(context).load(matchImageUrl).into(binding.ivChatProfileImage);
+                    Glide.with(context).load(matchImageUrl).circleCrop().into(binding.ivChatProfileImage);
                     String lastMessage = null;
                     try {
                         lastMessage = chat.getMessages().getJSONObject(chat.getMessages().length()-1).getString("message");
@@ -155,64 +155,6 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                 }
             });
 
-
-//            //Finding the chat id
-//            String chatId = chat.getString("chat_id");
-//
-//            //Querying Parse for that chat id
-//            ParseQuery<Chat> query = ParseQuery.getQuery(Chat.class);
-//            query.whereEqualTo("objectId", chatId);
-//            query.findInBackground(new FindCallback<Chat>() {
-//                @Override
-//                public void done(List<Chat> chats, ParseException e) {
-//                    if(e!=null){
-//                        Toast.makeText(context, "Trouble processing request", Toast.LENGTH_SHORT).show();
-//                        Log.i(TAG, e.toString());
-//                    }
-//
-//                    //chats should only contain one chat object matching the chat id from earlier
-//                    Chat chat = chats.get(0);
-//                    String matchId = null;
-//                    String lastMessage = null;
-//
-//                    try {
-//                        //We want to find the user's match's id, so we check to make sure we don't pull up the user's own info when displaying
-//                        //a chat preview
-//                        matchId = chat.getUsers().getString(0);
-//                        if (matchId.equals(ParseUser.getCurrentUser().getObjectId())) {
-//                            matchId = chat.getUsers().getString(1);
-//                        }
-//
-//                        //We want to find the last message and display it as a preview
-//                        lastMessage = chat.getMessages().getJSONObject(chat.getMessages().length()-1).getString("message");
-//                    } catch (JSONException ex) {
-//                        ex.printStackTrace();
-//                    }
-//
-//                    //Populate screen with last message
-//                    binding.tvChatScreenMessage.setText(lastMessage);
-//
-//                    ParseQuery<ParseUser> newQuery = ParseUser.getQuery();
-//                    newQuery.whereEqualTo("objectId", matchId);
-//                    newQuery.findInBackground(new FindCallback<ParseUser>() {
-//                        @Override
-//                        public void done(List<ParseUser> matches, ParseException e) {
-//                            if(e!=null){
-//                                Toast.makeText(context, "Trouble processing request", Toast.LENGTH_SHORT).show();
-//                                Log.i(TAG, e.toString());
-//                            }
-//
-//                            //Finding match's info and populating the view
-//                            ParseUser match = matches.get(0);
-//                            String matchName = match.getString("screenName");
-//                            String matchImageUrl = match.getParseFile("profileImage").getUrl();
-//
-//                            binding.tvChatScreenName.setText(matchName);
-//                            Glide.with(context).load(matchImageUrl).into(binding.ivChatProfileImage);
-//                        }
-//                    });
-//                }
-//            });
         }
         public void clear(){
             Glide.with(context).clear(binding.ivChatProfileImage);

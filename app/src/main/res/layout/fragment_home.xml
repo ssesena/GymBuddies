@@ -7,9 +7,31 @@
     tools:context=".fragments.HomeFragment">
 
 
+    <TextView
+        android:id="@+id/tvBeforeCurrentWorkout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Showing: "
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/toolbar_home_feed" />
+
+    <TextView
+        android:id="@+id/tvCurrentWorkoutPreference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:layout_below="@+id/toolbar_home_feed"
+        android:layout_toEndOf="@+id/tvBeforeCurrentWorkout"
+        android:layout_marginStart="1dp"
+        android:textStyle="bold"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHomeMatchProfiles"
-        android:layout_below="@+id/toolbar_home_feed"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvCurrentWorkoutPreference"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -24,22 +46,23 @@
         android:background="@color/colorPrimary"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <Spinner
-            android:id="@+id/spinner_home_feed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_gravity="right"
-            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:popupBackground="@android:color/white"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sort By"
             android:textSize="18sp"
             android:textColor="@android:color/white"
-            android:layout_gravity="right"
+            android:layout_gravity="left"
             android:id="@+id/toolbar_title" />
+        <Spinner
+            android:id="@+id/spinner_home_feed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:popupBackground="@android:color/white"/>
+
+
     </androidx.appcompat.widget.Toolbar>
 
     <Button

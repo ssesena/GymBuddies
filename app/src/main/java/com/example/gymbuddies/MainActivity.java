@@ -298,16 +298,13 @@ public class MainActivity extends AppCompatActivity {
         user.put("location", latitude + " " + longitude);
         Log.i(TAG, "Location updating");
         Log.i(TAG, "Location determined: " + location.toString());
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Toast.makeText(MainActivity.this, "Issue updating location", Toast.LENGTH_SHORT).show();
-                    Log.i(TAG, e.toString());
-                }
-                Log.i(TAG, ParseUser.getCurrentUser().getString("location"));
-            }
-        });
+        try {
+            user.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, ParseUser.getCurrentUser().getString("location"));
+
     }
 
     private void getLoc(){

@@ -104,7 +104,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @SuppressLint("CheckResult")
         public void bind(JSONObject message) throws JSONException {
 
-            Glide.with(context).load(message.getString("profileImageUrl")).into(ivProfileImage);
+            Glide.with(context).load(message.getString("profileImageUrl")).circleCrop().into(ivProfileImage);
             tvMessage.setText(message.getString("message"));
         }
 

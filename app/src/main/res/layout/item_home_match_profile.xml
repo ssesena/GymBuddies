@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".fragments.ChatFragment"
-    android:layout_marginTop="10dp">
+    android:layout_margin="10dp">
 
     <ImageView
         android:layout_width="100dp"
@@ -35,4 +35,17 @@
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/ivHomeProfileImage"
         android:fontFamily="sans-serif" />
+
+    <TextView
+        android:id="@+id/tvHomeExperience"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:textSize="22dp"
+        android:textStyle="italic"
+        android:textColor="@android:color/darker_gray"/>
+
 </RelativeLayout>
