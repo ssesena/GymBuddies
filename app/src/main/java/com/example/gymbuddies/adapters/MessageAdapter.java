@@ -109,4 +109,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
 
     }
+
+    public void clear() {
+        messages = new JSONArray();
+//        notifyDataSetChanged();
+    }
+
+    public void addAll(JSONArray newMessages) throws JSONException {
+        for(int i = 0; i < newMessages.length(); i++){
+            messages.put(newMessages.getJSONObject(i));
+        }
+        notifyDataSetChanged();
+    }
 }

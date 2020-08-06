@@ -2,13 +2,13 @@ package com.example.gymbuddies;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.gymbuddies.adapters.ChatPreviewAdapter;
 import com.example.gymbuddies.adapters.MessageAdapter;
@@ -22,8 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
-
-import java.util.Date;
 
 public class PrivateChatActivity extends AppCompatActivity {
 
@@ -76,13 +74,27 @@ public class PrivateChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String message = binding.etComposeMessage.getText().toString();
+                Chat updatedChat = null;
                 try {
-                    sendMessage(message, matchId, isNewChat, finalChatId);
+                    updatedChat = sendMessage(message, matchId, isNewChat, finalChatId);
                 } catch (JSONException | ParseException e) {
+                    e.printStackTrace();
+                }
+                binding.etComposeMessage.setText(null);
+//                hideSoftKeyboard(binding.etComposeMessage);
+                messageAdapter.clear();
+                try {
+                    messageAdapter.addAll(updatedChat.getMessages());
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private Chat findChat(String chatId) throws ParseException {
@@ -98,7 +110,7 @@ public class PrivateChatActivity extends AppCompatActivity {
         return query.find().get(0);
     }
 
-    private void sendMessage(String message, String matchId, Boolean isNewChat, String chatId) throws JSONException, ParseException {
+    private Chat sendMessage(String message, String matchId, Boolean isNewChat, String chatId) throws JSONException, ParseException {
         //First Check if a chat between the user an their match already exists
 
         //If it does not exist, I need to create a new Chat Object, add that chat object to the user and match's chats, and finally add the message
@@ -145,6 +157,7 @@ public class PrivateChatActivity extends AppCompatActivity {
         //I also have to make sure to update the order of the user's current chats
 //        orderChats(user, chat);
 //        orderChats(match, chat);
+        return chat;
     }
 
     private void orderChats(ParseUser newUser, Chat chat) throws JSONException, ParseException {

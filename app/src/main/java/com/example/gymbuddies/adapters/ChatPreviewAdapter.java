@@ -1,5 +1,6 @@
 package com.example.gymbuddies.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -31,6 +32,7 @@ import java.util.List;
 public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.ViewHolder>{
 
     public static final String TAG = "ChatPreviewAdapter";
+    public static final int REQUEST_CODE = 40;
 
     Context context;
     List<Chat> chats;
@@ -82,7 +84,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                     intent.putExtra("isNewChat", isNewChat);
 //                    intent.putExtra("chatId", chatId);
                     intent.putExtra(ChatPreviewAdapter.class.getSimpleName(), Parcels.wrap(clickedChat));
-                    context.startActivity(intent);
+                    ((Activity) context).startActivityForResult(intent, REQUEST_CODE);
 //                    holder.displayMatch(clickedMatch, false);
                 }
             }

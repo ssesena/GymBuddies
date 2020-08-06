@@ -77,31 +77,22 @@ public class PhotoActivity extends AppCompatActivity {
         JSONArray gallery =  user.getJSONArray("gallery");
         gallery.put(new ParseFile(photoFile));
         user.put("gallery", gallery);
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e != null){
-                    Log.e(TAG, "Error while saving",e);
-                    Toast.makeText(PhotoActivity.this, "Error while saving!", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        });
+        try {
+            user.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         finish();
 
     }
 
     private void uploadProfileImage(ParseUser user, File photoFile) {
         user.put("profileImage", new ParseFile(photoFile));
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if(e!=null){
-                    Log.e(TAG, "Error while saving",e);
-                    Toast.makeText(PhotoActivity.this, "Error while saving!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        try {
+            user.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         finish();
     }
 

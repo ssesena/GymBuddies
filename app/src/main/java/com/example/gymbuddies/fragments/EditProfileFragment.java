@@ -46,6 +46,7 @@ public class EditProfileFragment extends Fragment {
     public static final String TAG = "EditProfileFragment";
     private FragmentEditProfileBinding binding;
     public static final int GALLERY_PHOTO_LIMIT = 6;
+    public static final int REQUEST_CODE = 41;
 
 
     @Override
@@ -243,7 +244,7 @@ public class EditProfileFragment extends Fragment {
                 Boolean addProfileImage = true;
                 Intent intent = new Intent(getContext(), PhotoActivity.class);
                 intent.putExtra(EditProfileFragment.class.getSimpleName(), addProfileImage);
-                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
@@ -261,7 +262,7 @@ public class EditProfileFragment extends Fragment {
                 Boolean addProfileImage = false;
                 Intent intent = new Intent(getContext(), PhotoActivity.class);
                 intent.putExtra(EditProfileFragment.class.getSimpleName(), addProfileImage);
-                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
         });
 

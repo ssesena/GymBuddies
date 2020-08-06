@@ -1,7 +1,9 @@
 package com.example.gymbuddies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +28,14 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.parse.Parse.getApplicationContext;
 
 
 public class ChatFragment extends Fragment {
     ChatPreviewAdapter chatPreviewAdapter;
     List<Chat> chats;
+    public static final int REQUEST_CODE = 40;
 
     RecyclerView rvChats;
 
@@ -84,4 +88,5 @@ public class ChatFragment extends Fragment {
 
         return usersChats;
     }
+
 }

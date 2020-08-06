@@ -30,7 +30,7 @@ public class GalleryGridAdapter extends BaseAdapter {
     private Context context;
     public static final int HEIGHT = 400;
     public static final int NUMBER_OF_GALLERY_PHOTOS = 6;
-    private final JSONArray gallery;
+    private JSONArray gallery;
 
 
     public GalleryGridAdapter(Context context, JSONArray jsonArray) {
@@ -97,7 +97,7 @@ public class GalleryGridAdapter extends BaseAdapter {
     }
 
     public void deletePhoto(int index){
-        ParseUser user = ParseUser.getCurrentUser();
+        final ParseUser user = ParseUser.getCurrentUser();
         gallery.remove(index);
         user.put("gallery", gallery);
         user.saveInBackground(new SaveCallback() {
@@ -106,9 +106,26 @@ public class GalleryGridAdapter extends BaseAdapter {
                 if(e != null){
                     Log.e(TAG, "Error while saving",e);
                     Toast.makeText(context, "Error while saving!", Toast.LENGTH_LONG).show();
-
+                }
+                clear();
+                try {
+                    addAll(user.getJSONArray("gallery"));
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
+    }
+
+    public void clear() {
+        gallery = new JSONArray();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(JSONArray newGallery) throws JSONException {
+        for(int i = 0; i < newGallery.length(); i++){
+            gallery.put(newGallery.getJSONObject(i));
+        }
+        notifyDataSetChanged();
     }
 }

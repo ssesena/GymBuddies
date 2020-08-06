@@ -1,6 +1,7 @@
 package com.example.gymbuddies;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
     public static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
     public static final String TAG = "MainActivity";
+    public static final int MESSAGE_REQUEST_CODE = 40;
+    public static final int IMAGE_REQUEST_CODE = 41;
 
 
     @Override
@@ -209,6 +212,29 @@ public class MainActivity extends AppCompatActivity {
             if(!mLocationPermissionGranted){
                 getLocationPermission();
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i(TAG, "Request Code: "+String.valueOf(requestCode));
+        if(requestCode == IMAGE_REQUEST_CODE){
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+            Fragment fragment = new EditProfileFragment();
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+            Log.i(TAG, "Just took image");
+        }
+        if(requestCode == MESSAGE_REQUEST_CODE){
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+                Fragment fragment = new ChatFragment();
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                Log.i(TAG, "Just sent a message");
         }
     }
 }
