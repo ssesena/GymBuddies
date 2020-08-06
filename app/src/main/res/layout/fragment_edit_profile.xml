@@ -43,14 +43,14 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btnChangeBiography"
+            android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Update"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
+            android:text="Log Out"
             android:textAllCaps="false"
-            android:layout_marginEnd="10dp"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"/>
 
 
         <EditText
@@ -73,7 +73,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="sans-serif"
-            android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
 
@@ -83,9 +82,9 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:text="View Profile"
-            android:layout_toEndOf="@+id/tvEditProfileScreenName"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/ivEditProfileImage"
-            android:layout_marginStart="40dp"/>
+            android:layout_marginEnd="10dp" />
 
         <TextView
             android:id="@+id/tvEditProfileWorkoutPreference"
@@ -94,109 +93,86 @@
             android:layout_below="@+id/tvEditProfileScreenName"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif"
-            android:text="Workout Preference"
+            android:text="Workout Preference:"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spPreference"
-            android:layout_marginTop="12dp"
-            android:layout_below="@id/tvEditProfileWorkoutPreference"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/tvEditProfileScreenName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/btnChangePreference"
-            android:layout_alignParentStart="true"
+            android:layout_toEndOf="@+id/tvEditProfileExperiencePreference"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="15dp"
+            android:layout_alignParentEnd="true"
             android:entries="@array/workout_preferences" />
 
-        <Button
-            android:id="@+id/btnChangePreference"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvEditProfileWorkoutPreference"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:text="Update"
-            android:textAllCaps="false" />
 
         <TextView
             android:id="@+id/tvEditProfileExperience"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/spPreference"
+            android:layout_marginTop="37.5dp"
+            android:layout_below="@+id/tvEditProfileWorkoutPreference"
             android:fontFamily="sans-serif"
-            android:text="Your Experience"
+            android:text="Your Experience:"
+            android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
         <Spinner
             android:id="@+id/spExperience"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/tvEditProfileExperience"
+            android:layout_below="@+id/spPreference"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/btnChangePreference"
-            android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/tvEditProfileExperiencePreference"
             android:entries="@array/workout_experience" />
 
-        <Button
-            android:id="@+id/btnChangeExperience"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvEditProfileExperience"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:text="Update"
-            android:textAllCaps="false"/>
 
         <TextView
             android:id="@+id/tvEditProfileExperiencePreference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="37dp"
             android:fontFamily="sans-serif"
-            android:layout_below="@+id/spExperience"
-            android:text="Experience Preference"
+            android:layout_below="@+id/tvEditProfileExperience"
+            android:textSize="20sp"
+            android:text="Experience Preference:"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Spinner
             android:id="@+id/spExperiencePreference"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/tvEditProfileExperiencePreference"
+            android:layout_below="@+id/spExperience"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/btnChangePreference"
-            android:layout_alignParentStart="true"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/tvEditProfileExperiencePreference"
             android:entries="@array/workout_experience" />
 
-        <Button
-            android:id="@+id/btnChangeExperiencePreference"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvEditProfileExperiencePreference"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:text="Update"
-            android:textAllCaps="false"/>
+
 
         <GridView
             android:id="@+id/gvEditProfileGallery"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:gravity="center"
-            android:layout_margin="10dp"
-            android:layout_below="@+id/btnChangeExperiencePreference"
+            android:layout_below="@+id/tvEditProfileExperiencePreference"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:numColumns="3"
             android:columnWidth="100dp"
             android:horizontalSpacing="10dp"
+            android:layout_marginTop="20dp"
             android:verticalSpacing="10dp" />
 
         <Button
@@ -210,15 +186,13 @@
             android:layout_marginTop="10dp"/>
 
         <Button
-            android:id="@+id/btnLogout"
+            android:id="@+id/btnSaveAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/btnAddPhotoToGallery"
-            android:text="Log Out"
-            android:layout_marginBottom="10dp"
-            android:textAllCaps="false"
-            android:layout_marginTop="10dp"/>
+            android:text="Save All"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false" />
 
 
     </RelativeLayout>

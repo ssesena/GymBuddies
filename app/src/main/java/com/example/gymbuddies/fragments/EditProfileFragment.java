@@ -197,47 +197,6 @@ public class EditProfileFragment extends Fragment {
 
     private void setButtonOnClickListeners(final FragmentEditProfileBinding binding) {
 
-        binding.btnChangePreference.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String value = binding.spPreference.getSelectedItem().toString();
-                changeUserPreferences("workout_preference", value);
-                findMatches();
-
-
-            }
-        });
-
-        binding.btnChangeExperience.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String value = binding.spExperience.getSelectedItem().toString();
-                changeUserPreferences("user_experience", value);
-                findMatches();
-
-
-            }
-        });
-
-        binding.btnChangeExperiencePreference.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String value = binding.spExperiencePreference.getSelectedItem().toString();
-                changeUserPreferences("experience_preference", value);
-                findMatches();
-
-
-            }
-        });
-
-        binding.btnChangeBiography.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String biography = binding.etEditProfileBiography.getText().toString();
-                changeBiography(biography);
-            }
-        });
-
         binding.ivAddImageToProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -279,6 +238,25 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View view) {
                 Boolean userProfile = true;
                 goViewProfileActivity(userProfile);
+            }
+        });
+
+        binding.btnSaveAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String value = binding.spPreference.getSelectedItem().toString();
+                changeUserPreferences("workout_preference", value);
+
+                value = binding.spExperience.getSelectedItem().toString();
+                changeUserPreferences("user_experience", value);
+
+                value = binding.spExperiencePreference.getSelectedItem().toString();
+                changeUserPreferences("experience_preference", value);
+
+                String biography = binding.etEditProfileBiography.getText().toString();
+                changeBiography(biography);
+
+                findMatches();
             }
         });
     }
