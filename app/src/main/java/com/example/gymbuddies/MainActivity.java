@@ -9,12 +9,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +42,12 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
@@ -55,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
     public static final int MESSAGE_REQUEST_CODE = 40;
     public static final int IMAGE_REQUEST_CODE = 41;
+
+    private LocationManager lm;
+    private LocationListener locationListener;
 
 
     @Override
@@ -103,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             });
             binding.bottomNavigation.setSelectedItemId(R.id.action_home);
         }
+        getLoc();
 
     }
 
@@ -225,7 +238,34 @@ public class MainActivity extends AppCompatActivity {
             if(!mLocationPermissionGranted){
                 getLocationPermission();
             }
+            else{
+                SmartLocation.with(this).location()
+                        .oneFix()
+                        .start(new OnLocationUpdatedListener() {
+                            @Override
+                            public void onLocationUpdated(Location location) {
+                                updateLocation(location);
+                            }
+                        });
+            }
         }
+    }
+
+    private void updateLocation(Location location) {
+        final ParseUser user = ParseUser.getCurrentUser();
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+        user.put("location", latitude+" "+longitude);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null){
+                    Toast.makeText(MainActivity.this, "Issue updating location", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, e.toString());
+                }
+                Log.i(TAG, user.getString("location"));
+            }
+        });
     }
 
     @Override
@@ -250,4 +290,48 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Just sent a message");
         }
     }
+
+    private void updateLoc(Location location) {
+        final ParseUser user = ParseUser.getCurrentUser();
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+        user.put("location", latitude + " " + longitude);
+        Log.i(TAG, "Location updating");
+        Log.i(TAG, "Location determined: " + location.toString());
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(MainActivity.this, "Issue updating location", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, e.toString());
+                }
+                Log.i(TAG, ParseUser.getCurrentUser().getString("location"));
+            }
+        });
+    }
+
+    private void getLoc(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Log.i(TAG, "Permission denied");
+            return;
+        }
+        Log.i(TAG, "App Opened");
+        SmartLocation.with(this).location()
+                .oneFix()
+                .start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        Log.i(TAG, "Got Location!");
+                        updateLoc(location);
+                    }
+                });
+    }
+
 }

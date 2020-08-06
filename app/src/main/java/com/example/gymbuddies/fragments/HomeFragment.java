@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +34,18 @@ import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.FragmentHomeBinding;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -48,6 +59,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 
 public class HomeFragment extends Fragment {
@@ -75,6 +89,7 @@ public class HomeFragment extends Fragment {
         ParseUser.getCurrentUser().fetchInBackground();
         matches = ParseUser.getCurrentUser().getJSONArray("filtered_matches");
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
+
 
         Log.i(TAG, user.getString("location"));
 
@@ -223,31 +238,24 @@ public class HomeFragment extends Fragment {
 
         setSpinnerToValue(binding.spinnerHomeFeed, user.getString("filter_option"));
 
-        binding.btnUpdateLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission( getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    Log.i(TAG, "Permission denied");
-                    return;
-                }
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            updateLocation(location);
-                        }
-                    }
-                });
-            }
-        });
+//        getLocation();
+
+//        binding.btnUpdateLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getLocation();
+////                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+////                    @Override
+////                    public void onSuccess(Location location) {
+////                        // Got last known location. In some rare situations this can be null.
+////                        if (location != null) {
+////                            Log.i(TAG, "Got Location!");
+////                            updateLocation(location);
+////                        }
+////                    }
+////                });
+//            }
+//        });
 
         return binding.getRoot();
     }
@@ -256,18 +264,45 @@ public class HomeFragment extends Fragment {
         final ParseUser user = ParseUser.getCurrentUser();
         String latitude = String.valueOf(location.getLatitude());
         String longitude = String.valueOf(location.getLongitude());
-        user.put("location", latitude+" "+longitude);
+        user.put("location", latitude + " " + longitude);
+        Log.i(TAG, "Location updating");
+        Log.i(TAG, "Location determined: " + location.toString());
         user.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e != null){
+                if (e != null) {
                     Toast.makeText(getContext(), "Issue updating location", Toast.LENGTH_SHORT).show();
                     Log.i(TAG, e.toString());
                 }
-                Log.i(TAG, user.getString("location"));
+                Log.i(TAG, ParseUser.getCurrentUser().getString("location"));
             }
         });
     }
+
+    private void getLocation(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Log.i(TAG, "Permission denied");
+            return;
+        }
+        Log.i(TAG, "App Opened");
+        SmartLocation.with(getContext()).location()
+                .start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        Log.i(TAG, "Got Location!");
+                        updateLocation(location);
+                    }
+                });
+    }
+
+
 
     public void setSpinnerToValue(Spinner spinner, String value) {
         int index = 0;
@@ -281,100 +316,5 @@ public class HomeFragment extends Fragment {
         spinner.setSelection(index);
     }
 
-//    private void getLocationPermission() {
-//        /*
-//         * Request location permission, so that we can get the location of the
-//         * device. The result of the permission request is handled by a callback,
-//         * onRequestPermissionsResult.
-//         */
-//        if (ContextCompat.checkSelfPermission(getContext(),
-//                android.Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            mLocationPermissionGranted = true;
-//        } else {
-//            ActivityCompat.requestPermissions(getActivity(),
-//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String permissions[],
-//                                           @NonNull int[] grantResults) {
-//        mLocationPermissionGranted = false;
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    mLocationPermissionGranted = true;
-//                }
-//            }
-//        }
-//    }
-//
-//    private boolean checkMapServices(){
-//        if(isServicesOK()){
-//            if(isMapsEnabled()){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    private void buildAlertMessageNoGps() {
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-//                .setCancelable(false)
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-//                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
-//                    }
-//                });
-//        final AlertDialog alert = builder.create();
-//        alert.show();
-//    }
-//
-//    public boolean isMapsEnabled(){
-//        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//
-//        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-//            buildAlertMessageNoGps();
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    public boolean isServicesOK(){
-//        Log.d(TAG, "isServicesOK: checking google services version");
-//
-//        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
-//
-//        if(available == ConnectionResult.SUCCESS){
-//            //everything is fine and the user can make map requests
-//            Log.d(TAG, "isServicesOK: Google Play Services is working");
-//            return true;
-//        }
-//        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-//            //an error occured but we can resolve it
-//            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
-//            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
-//            dialog.show();
-//        }else{
-//            Toast.makeText(getContext(), "You can't make map requests", Toast.LENGTH_SHORT).show();
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if(checkMapServices()){
-//            if(!mLocationPermissionGranted){
-//                getLocationPermission();
-//            }
-//        }
-//    }
+
 }
