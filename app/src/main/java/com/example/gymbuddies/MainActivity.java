@@ -27,6 +27,7 @@ import com.example.gymbuddies.databinding.ActivityMainBinding;
 import com.example.gymbuddies.fragments.ChatFragment;
 import com.example.gymbuddies.fragments.EditProfileFragment;
 import com.example.gymbuddies.fragments.HomeFragment;
+import com.example.gymbuddies.models.Chat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -65,31 +66,43 @@ public class MainActivity extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                }
+        Intent intent = getIntent();
 
-                Fragment fragment;
-                switch (item.getItemId()) {
-                    case R.id.action_profile:
-                        fragment = new EditProfileFragment();
-                        break;
-                    case R.id.action_home:
-                        fragment = new HomeFragment();
-                        break;
-                    case R.id.action_chat:
-                    default:
-                        fragment = new ChatFragment();
-                        break;
+        if(intent.getBooleanExtra(ViewProfileActivity.class.getSimpleName(), false)){
+//            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+//                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+//            }
+            fragmentManager.beginTransaction().replace(R.id.flContainer, new ChatFragment()).commit();
+            binding.bottomNavigation.setSelectedItemId(R.id.action_chat);
+        }
+        else {
+            binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                    }
+
+                    Fragment fragment;
+                    switch (item.getItemId()) {
+                        case R.id.action_profile:
+                            fragment = new EditProfileFragment();
+                            break;
+                        case R.id.action_chat:
+                            fragment = new ChatFragment();
+                            break;
+                        case R.id.action_home:
+                        default:
+                            fragment = new HomeFragment();
+                            break;
+
+                    }
+                    fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                    return true;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-                return true;
-            }
-        });
-        binding.bottomNavigation.setSelectedItemId(R.id.action_home);
+            });
+            binding.bottomNavigation.setSelectedItemId(R.id.action_home);
+        }
 
     }
 
@@ -229,12 +242,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Just took image");
         }
         if(requestCode == MESSAGE_REQUEST_CODE){
-                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                }
-                Fragment fragment = new ChatFragment();
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-                Log.i(TAG, "Just sent a message");
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+            Fragment fragment = new ChatFragment();
+            fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+            Log.i(TAG, "Just sent a message");
         }
     }
 }

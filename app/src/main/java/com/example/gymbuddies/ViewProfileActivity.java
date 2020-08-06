@@ -1,6 +1,9 @@
 package com.example.gymbuddies;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.graphics.Matrix;
@@ -20,6 +23,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.gymbuddies.adapters.FlipperAdapter;
 import com.example.gymbuddies.adapters.HomeFeedAdapter;
 import com.example.gymbuddies.databinding.ActivityViewProfileBinding;
+import com.example.gymbuddies.fragments.ChatFragment;
 import com.example.gymbuddies.fragments.EditProfileFragment;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
@@ -39,11 +43,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     String matchProfileImageUrl = null;
     public static final String TAG = "ViewProfileActivity";
     ParseUser match;
-    Matrix matrix = new Matrix();
-    float scale = 1f;
-    ScaleGestureDetector scaleGestureDetector;
-    PhotoViewAttacher photoViewAttacher;
-
+    public static final int REQUEST_CODE = 42;
 
 
     @Override
@@ -53,10 +53,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        Animation right_to_left_in = AnimationUtils.loadAnimation(this, R.anim.right_to_left_in);
-        Animation right_to_left_out = AnimationUtils.loadAnimation(this, R.anim.right_to_left_out);
-        Animation left_to_right_in = AnimationUtils.loadAnimation(this, R.anim.left_to_right_in);
-        Animation left_to_right_out = AnimationUtils.loadAnimation(this, R.anim.left_to_right_out);
+//        Animation right_to_left_in = AnimationUtils.loadAnimation(this, R.anim.right_to_left_in);
+//        Animation right_to_left_out = AnimationUtils.loadAnimation(this, R.anim.right_to_left_out);
+//        Animation left_to_right_in = AnimationUtils.loadAnimation(this, R.anim.left_to_right_in);
+//        Animation left_to_right_out = AnimationUtils.loadAnimation(this, R.anim.left_to_right_out);
 //        binding.isImageSlideLeft.setInAnimation(right_to_left_in);
 //        binding.isImageSlideLeft.setOutAnimation(right_to_left_out);
 //        binding.isImageSlideRight.setOutAnimation(left_to_right_out);
@@ -185,7 +185,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                     intent.putExtra("matchId", matchId);
                     Log.i(TAG, matchId);
                     intent.putExtra("isNewChat", true);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             });
         }
@@ -225,10 +225,25 @@ public class ViewProfileActivity extends AppCompatActivity {
 //    }
 
     public void onPrevClicked(View view){
+        binding.adapterViewFlipper.setInAnimation(this, R.animator.left_in);
+        binding.adapterViewFlipper.setOutAnimation(this, R.animator.right_out);
         binding.adapterViewFlipper.showPrevious();
     }
 
     public void onNextClicked(View view){
+        binding.adapterViewFlipper.setInAnimation(this, R.animator.right_in);
+        binding.adapterViewFlipper.setOutAnimation(this, R.animator.left_out);
         binding.adapterViewFlipper.showNext();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE){
+            Intent intent = new Intent(this, MainActivity.class);
+            Boolean newchat = true;
+            intent.putExtra(ViewProfileActivity.class.getSimpleName(), newchat);
+            startActivity(intent);
+        }
     }
 }
