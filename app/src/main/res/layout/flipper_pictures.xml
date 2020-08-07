@@ -7,7 +7,7 @@
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/ivViewProfileImage"
         android:layout_width="415dp"
-        android:layout_height="300dp"
+        android:layout_height="375dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"

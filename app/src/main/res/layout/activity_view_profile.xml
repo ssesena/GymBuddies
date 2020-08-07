@@ -10,7 +10,7 @@
     <AdapterViewFlipper
         android:id="@+id/adapterViewFlipper"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="375dp"/>
 
 
     <ImageView
@@ -21,7 +21,7 @@
         android:layout_marginStart="-15dp"
         android:src="@drawable/ic_baseline_arrow_forward_ios_24"
         android:onClick="onPrevClicked"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="125dp"/>
 
     <ImageView
         android:id="@+id/ivForwardArrow"
@@ -29,11 +29,12 @@
         android:layout_height="100dp"
         android:layout_marginEnd="-15dp"
         android:src="@drawable/ic_baseline_arrow_forward_ios_24"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="125dp"
         android:onClick="onNextClicked"
         android:layout_alignParentEnd="true"/>
 
     <TextView
+        android:paddingLeft="10dp"
         android:id="@+id/tvViewProfileScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +44,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"/>
     <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:id="@+id/tvViewProfileBiography"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,6 +66,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
     <TextView
+        android:padding="10dp"
         android:id="@+id/tvViewProfilePreference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +74,8 @@
         android:layout_marginTop="10dp"
         android:layout_below="@id/tvViewProfileScreenName"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="italic"/>
+        android:textStyle="italic"
+        android:textColor="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/btnStartPrivateChat"
@@ -79,7 +84,8 @@
         android:textAllCaps="false"
         android:text="Chat!"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"/>
 
     <Button
         android:id="@+id/btnFindGyms"
@@ -88,6 +94,7 @@
         android:layout_alignParentEnd="true"
         android:text="Find Gyms"
         android:textAllCaps="false"
+        android:layout_margin="10dp"
         android:layout_alignParentBottom="true"/>
     
 

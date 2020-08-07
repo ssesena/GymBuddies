@@ -90,9 +90,6 @@ public class HomeFragment extends Fragment {
         matches = ParseUser.getCurrentUser().getJSONArray("filtered_matches");
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
-
-        Log.i(TAG, user.getString("location"));
-
         //For getting the user's current location
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
