@@ -14,15 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:text="Take Photo"
-        android:textAllCaps="false"/>
-    
-    <Button
-        android:id="@+id/btnChooseFromGallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="40dp"
-        android:text="Choose from Gallery"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
     
     <ImageView
         android:id="@+id/ivPhotoImage"
@@ -37,7 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
         android:text="Add to Profile"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
         
 

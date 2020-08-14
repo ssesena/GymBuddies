@@ -33,6 +33,7 @@
         android:onClick="onNextClicked"
         android:layout_alignParentEnd="true"/>
 
+
     <TextView
         android:paddingLeft="10dp"
         android:id="@+id/tvViewProfileScreenName"

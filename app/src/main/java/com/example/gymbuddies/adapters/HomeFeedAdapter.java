@@ -118,7 +118,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
             displayMatch(match, forHomeFeed);
         }
 
-        public void displayMatch(JSONObject match, final Boolean forHomeFeed){
+        public void displayMatch(final JSONObject match, final Boolean forHomeFeed){
             ParseQuery<ParseUser> query = ParseUser.getQuery();
             try {
                 query.whereEqualTo("objectId", match.getString("objectId"));
@@ -134,7 +134,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.ViewHo
                         String matchBio = userMatch.getString("biography");
                         String matchName = userMatch.getString("screenName");
                         String matchExperience = userMatch.getString("user_experience");
-
                         Glide.with(context).load(matchImageUrl).circleCrop().into(binding.ivHomeProfileImage);
                         binding.tvHomeBiography.setText(matchBio);
                         binding.tvHomeScreenName.setText(matchName);

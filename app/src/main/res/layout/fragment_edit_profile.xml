@@ -42,15 +42,16 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
 
+
         <Button
-            android:id="@+id/btnLogout"
+            android:id="@+id/btnSaveAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log Out"
-            android:textAllCaps="false"
+            android:text="Save All"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:textAllCaps="false"/>
 
 
         <EditText
@@ -181,19 +182,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/gvEditProfileGallery"
-            android:text="Add Photo"
+            android:text="Add Photo to Gallery"
             android:textAllCaps="false"
             android:layout_marginTop="10dp"/>
 
+
         <Button
-            android:id="@+id/btnSaveAll"
+            android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Log Out"
             android:layout_below="@+id/btnAddPhotoToGallery"
-            android:text="Save All"
-            android:layout_centerHorizontal="true"
-            android:textAllCaps="false" />
-
+            android:textAllCaps="false"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </ScrollView>

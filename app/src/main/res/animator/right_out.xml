@@ -4,5 +4,5 @@
     android:propertyName="x"
     android:valueType="floatType"
     android:valueFrom="0"
-    android:valueTo="1500"
-    android:duration="600"/>
+    android:valueTo="1075"
+    android:duration="300"/>

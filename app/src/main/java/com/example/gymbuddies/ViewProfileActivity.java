@@ -53,15 +53,6 @@ public class ViewProfileActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-//        Animation right_to_left_in = AnimationUtils.loadAnimation(this, R.anim.right_to_left_in);
-//        Animation right_to_left_out = AnimationUtils.loadAnimation(this, R.anim.right_to_left_out);
-//        Animation left_to_right_in = AnimationUtils.loadAnimation(this, R.anim.left_to_right_in);
-//        Animation left_to_right_out = AnimationUtils.loadAnimation(this, R.anim.left_to_right_out);
-//        binding.isImageSlideLeft.setInAnimation(right_to_left_in);
-//        binding.isImageSlideLeft.setOutAnimation(right_to_left_out);
-//        binding.isImageSlideRight.setOutAnimation(left_to_right_out);
-//        binding.isImageSlideRight.setInAnimation(left_to_right_in);
-
         photoIndex = -1;
 
         //Getting intent from either home fee or edit profile screen
@@ -105,8 +96,13 @@ public class ViewProfileActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
         }
         else {
+
+
+            binding.btnFindGyms.setVisibility(View.GONE);
+            binding.btnStartPrivateChat.setVisibility(View.GONE);
 
             //Retrieving current logged in user
             ParseUser user = ParseUser.getCurrentUser();
@@ -154,28 +150,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
 
     private void setOnCLickListeners(final String matchId) {
-//        binding.ivBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Boolean next = false;
-//                try {
-//                    showNextImage(next);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        binding.ivForwardArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Boolean next = true;
-//                try {
-//                    showNextImage(next);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+
 
         if(matchId != null) {
             binding.btnStartPrivateChat.setOnClickListener(new View.OnClickListener() {
@@ -200,29 +175,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         });
     }
 
-//    private void showNextImage(Boolean next) throws JSONException {
-//        if(next){
-//            photoIndex++;
-//            if(photoIndex < matchGallery.length()){
-//                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
-//                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
-//            }
-//            else{
-//                photoIndex--;
-//            }
-//        }
-//        else{
-//            photoIndex--;
-//            if(photoIndex < 0){
-//                Glide.with(this).load(matchProfileImageUrl).into(binding.ivViewProfileImage);
-//                photoIndex = -1;
-//            }
-//            else{
-//                String matchImageUrl = matchGallery.getJSONObject(photoIndex).getString("url");
-//                Glide.with(this).load(matchImageUrl).into(binding.ivViewProfileImage);
-//            }
-//        }
-//    }
+
 
     public void onPrevClicked(View view){
         binding.adapterViewFlipper.setInAnimation(this, R.animator.left_in);

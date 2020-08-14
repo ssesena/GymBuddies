@@ -133,10 +133,10 @@ public class EditProfileFragment extends Fragment {
                 Collections.sort(distances);
 
                 //Now to iterate through the distances
-                for(double distance:distances){
+                for(int i = 0; i < distances.size(); i++){
 
                     //And add them to the user's potential match list
-                    closestMatches.add(distanceToMatchDict.get(distance));
+                    closestMatches.add(distanceToMatchDict.get(distances.get(i)));
                 }
 
                 //Create a new JSON Array to store matches
@@ -144,9 +144,10 @@ public class EditProfileFragment extends Fragment {
 
 
                 //Next we update the user's matches by iterating through the new list
-                for(ParseUser match:closestMatches){
-                    newMatches.put(match);
+                for(int i = 0; i < closestMatches.size(); i++){
+                    newMatches.put(closestMatches.get(i));
                 }
+
 
                 //Finally we update the user's matches
                 user.put("matches", newMatches);
@@ -256,7 +257,7 @@ public class EditProfileFragment extends Fragment {
                 String biography = binding.etEditProfileBiography.getText().toString();
                 changeBiography(biography);
 
-                findMatches();
+//                findMatches();
             }
         });
     }
@@ -289,15 +290,6 @@ public class EditProfileFragment extends Fragment {
 
     private void changeUserPreferences(String property, String value) {
         user.put(property, value);
-//        user.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//            if(e!=null){
-//                Log.e(TAG, "Error while saving",e);
-//                Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
-//            }
-//            }
-//        });
         try {
             user.save();
         } catch (ParseException e) {

@@ -58,6 +58,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
@@ -85,6 +88,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        findMatches();
         final ParseUser user = ParseUser.getCurrentUser();
         ParseUser.getCurrentUser().fetchInBackground();
         matches = ParseUser.getCurrentUser().getJSONArray("filtered_matches");
@@ -109,9 +113,11 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+
         binding.spinnerHomeFeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
 
                 //Get the selected item from the filter options
                 String filterOption = binding.spinnerHomeFeed.getSelectedItem().toString();
@@ -298,6 +304,124 @@ public class HomeFragment extends Fragment {
             }
         }
         spinner.setSelection(index);
+    }
+
+    private void findMatches() {
+        final ParseUser user = ParseUser.getCurrentUser();
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereNotEqualTo("username", user.getUsername());
+        query.whereEqualTo("workout_preference", user.getString("workout_preference"));
+        String[]matchPreferences = findPreferredExperience(user.getString("user_experience"));
+        String[]userPreferences = findPreferredExperience(user.getString("experience_preference"));
+        query.whereContainedIn("experience_preference", Arrays.asList(matchPreferences));
+        query.whereContainedIn("user_experience", Arrays.asList(userPreferences));
+        Log.i(TAG, query.toString());
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> matches, ParseException e) {
+                if(e!=null){
+                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Log.i(TAG, matches.size()+"");
+
+                //Get logged in user's location and parse correctly
+                String userCoords[] = user.getString("location").split(" ");
+                double userLat = Double.parseDouble(userCoords[0]);
+                double userLon = Double.parseDouble(userCoords[1]);
+
+                //Create Array and Hash Table to keep track of which matches are the closest
+                ArrayList<Double> distances = new ArrayList<>();
+                Hashtable<Double, ParseUser> distanceToMatchDict = new Hashtable<Double, ParseUser>();
+                ArrayList<ParseUser> closestMatches = new ArrayList<>();
+
+
+                //Iterate through the matches
+                for(ParseUser match:matches){
+
+//                    Log.i(TAG, match.toString());
+
+                    //Parse matches location correctly
+                    String matchCoords[] = match.getString("location").split(" ");
+                    double matchLat = Double.parseDouble(matchCoords[0]);
+                    double matchLon = Double.parseDouble(matchCoords[1]);
+
+                    //Find distance between user and match
+                    double distance = findDistance(userLat,userLon,matchLat,matchLon);
+
+                    //Add distance to list and hash table
+                    distances.add(distance);
+                    distanceToMatchDict.put(distance, match);
+                }
+
+                Log.i(TAG, distances.toString());
+                Log.i(TAG, distanceToMatchDict.toString());
+
+                //After all that, now I need to sort them
+                Collections.sort(distances);
+
+                //Now to iterate through the distances
+                for(int i = 0; i < distances.size(); i++){
+
+                    //And add them to the user's potential match list
+                    closestMatches.add(distanceToMatchDict.get(distances.get(i)));
+                }
+
+                //Create a new JSON Array to store matches
+                JSONArray newMatches = new JSONArray();
+
+
+                //Next we update the user's matches by iterating through the new list
+                for(int i = 0; i < closestMatches.size(); i++){
+                    newMatches.put(closestMatches.get(i));
+                }
+
+
+                //Finally we update the user's matches
+                user.put("matches", newMatches);
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null){
+                            Log.e(TAG, "Error while saving",e);
+                            Toast.makeText(getContext(), "Error while saving!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    private String[] findPreferredExperience(String experiencePreference){
+        if(experiencePreference.equals("Beginner")){
+            return new String[]{"Beginner", "Intermediate"};
+        }
+        else if(experiencePreference.equals("Intermediate")){
+            return new String[]{"Beginner", "Intermediate", "Advanced"};
+        }
+        else if (experiencePreference.equals("Advanced")){
+            return new String[]{"Intermediate", "Advanced", "Expert"};
+        }
+        return new String[]{"Advanced", "Expert"};
+    }
+
+    private static double findDistance(double lat1, double lon1, double lat2, double lon2) {
+        double R = 3958.8; // miles
+        double φ1 = lat1 * Math.PI/180; // φ, λ in radians
+        double φ2 = lat2 * Math.PI/180;
+        double Δφ = (lat2-lat1) * Math.PI/180;
+        double Δλ = (lon2-lon1) * Math.PI/180;
+
+        double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double d = R * c; // in miles
+        Log.i(TAG, lat1+","+lon1+","+lat2+","+lon2);
+        return d;
     }
 
 

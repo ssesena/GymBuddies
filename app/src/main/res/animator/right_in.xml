@@ -3,6 +3,6 @@
     android:interpolator="@android:anim/accelerate_decelerate_interpolator"
     android:propertyName="x"
     android:valueType="floatType"
-    android:valueFrom="1500"
+    android:valueFrom="1075"
     android:valueTo="0"
-    android:duration="600"/>
+    android:duration="300"/>

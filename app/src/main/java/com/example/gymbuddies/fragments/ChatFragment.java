@@ -61,8 +61,10 @@ public class ChatFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.rvChatPreviews.setLayoutManager(linearLayoutManager);
 
-        chatPreviewAdapter = new ChatPreviewAdapter(getContext(), chats);
-        binding.rvChatPreviews.setAdapter(chatPreviewAdapter);
+        if(chats != null && chats.size() != 0) {
+            chatPreviewAdapter = new ChatPreviewAdapter(getContext(), chats);
+            binding.rvChatPreviews.setAdapter(chatPreviewAdapter);
+        }
 
         return binding.getRoot();
     }

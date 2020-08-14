@@ -16,6 +16,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -43,8 +45,15 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
@@ -80,42 +89,45 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+
+                Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.action_profile:
+                        fragment = new EditProfileFragment();
+                        break;
+                    case R.id.action_chat:
+                        fragment = new ChatFragment();
+                        break;
+                    case R.id.action_home:
+                    default:
+                        fragment = new HomeFragment();
+                        break;
+
+                }
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                return true;
+            }
+        });
+
         if(intent.getBooleanExtra(ViewProfileActivity.class.getSimpleName(), false)){
-//            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-//                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-//            }
-            fragmentManager.beginTransaction().replace(R.id.flContainer, new ChatFragment()).commit();
             binding.bottomNavigation.setSelectedItemId(R.id.action_chat);
         }
         else {
-            binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                    }
 
-                    Fragment fragment;
-                    switch (item.getItemId()) {
-                        case R.id.action_profile:
-                            fragment = new EditProfileFragment();
-                            break;
-                        case R.id.action_chat:
-                            fragment = new ChatFragment();
-                            break;
-                        case R.id.action_home:
-                        default:
-                            fragment = new HomeFragment();
-                            break;
-
-                    }
-                    fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-                    return true;
-                }
-            });
             binding.bottomNavigation.setSelectedItemId(R.id.action_home);
         }
-        getLoc();
+
+        ParseUser user = ParseUser.getCurrentUser();
+        if(user.getUsername().equals("ssesena")) {
+            Log.i(TAG, "Current User: " + ParseUser.getCurrentUser().getUsername());
+            getLoc();
+        }
 
     }
 
@@ -135,14 +147,6 @@ public class MainActivity extends AppCompatActivity {
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
 
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-//        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult) {
-//                // do work here
-//                onLocationChanged(locationResult.getLastLocation());
-//            }
-//        }
     }
     private void getLocationPermission() {
         /*
@@ -331,4 +335,32 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
+    boolean saveBitmapToFile(File dir, String fileName, Bitmap bm,
+                             Bitmap.CompressFormat format, int quality) {
+
+        File imageFile = new File(dir,fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imageFile);
+
+            bm.compress(format,quality,fos);
+
+            fos.close();
+
+            return true;
+        }
+        catch (IOException e) {
+            Log.e("app",e.getMessage());
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
 }

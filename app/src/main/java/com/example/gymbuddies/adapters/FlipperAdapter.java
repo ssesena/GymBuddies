@@ -61,12 +61,6 @@ public class FlipperAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view2 = inflater.inflate(R.layout.flipper_pictures, null);
         PhotoView imageView = (PhotoView) view2.findViewById(R.id.ivViewProfileImage);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Image clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Glide.with(context).load(imageUrl).into(imageView);
         return view2;

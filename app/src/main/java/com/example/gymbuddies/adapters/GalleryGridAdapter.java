@@ -1,6 +1,7 @@
 package com.example.gymbuddies.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.gymbuddies.R;
@@ -74,6 +77,8 @@ public class GalleryGridAdapter extends BaseAdapter {
                 icon.setImageResource(R.drawable.ic_baseline_remove_circle_24);
 
                 ImageView imageView = (ImageView) view.findViewById(R.id.ivGalleryImage);
+
+
                 Glide.with(context).load(image.get("url")).into(imageView);
 
                 icon.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +90,7 @@ public class GalleryGridAdapter extends BaseAdapter {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.i(TAG, "Worked");
             }
 
         }

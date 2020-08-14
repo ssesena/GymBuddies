@@ -19,7 +19,7 @@
         android:id="@+id/ivRemovePhoto"
         tools:srcCompat="@tools:sample/avatars"
         android:layout_marginTop="135dp"
-        android:layout_marginStart="75dp"/>
+        android:layout_marginStart="80dp"/>
 </RelativeLayout>
 
 
